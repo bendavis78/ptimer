@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Dialog,
   DialogTitle,
@@ -24,6 +25,7 @@ import {
 } from '../constants/muscleGroups';
 
 function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
+  const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [sets, setSets] = useState(0);
@@ -33,6 +35,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   const [muscleGroup, setMuscleGroup] = useState('');
 
   const resetForm = useCallback(() => {
+    setId('');
     setName('');
     setDescription('');
     setSets(0);
@@ -45,6 +48,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   useEffect(() => {
     if (open) {
       if (exercise) {
+        setId(exercise.id || '');
         setName(exercise.name || '');
         setDescription(exercise.description || '');
         setSets(exercise.sets || 0);
@@ -61,6 +65,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate({
+      id: id || uuidv4(),
       name,
       description,
       sets,

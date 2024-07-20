@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Container, 
@@ -50,7 +51,7 @@ function RoutineDetails() {
 
   const handleExerciseUpdate = (updatedExercise) => {
     const updatedExercises = exercises.map(ex => 
-      ex.name === updatedExercise.name ? updatedExercise : ex
+      ex.id === updatedExercise.id ? updatedExercise : ex
     );
     setExercises(updatedExercises);
     
@@ -72,7 +73,7 @@ function RoutineDetails() {
 
   const handleAddExercise = () => {
     if (newExerciseName.trim() !== '') {
-      const updatedExercises = [...exercises, { name: newExerciseName.trim() }];
+      const updatedExercises = [...exercises, { id: uuidv4(), name: newExerciseName.trim() }];
       setExercises(updatedExercises);
       
       const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');

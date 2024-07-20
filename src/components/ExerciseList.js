@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { 
   List, 
   ListItem, 
@@ -45,11 +46,11 @@ function ExerciseList() {
     if (selectedExercise) {
       // Update existing exercise
       updatedExercises = exercises.map(ex => 
-        ex.name === selectedExercise.name ? exerciseData : ex
+        ex.id === selectedExercise.id ? exerciseData : ex
       );
     } else {
       // Add new exercise
-      updatedExercises = [...exercises, exerciseData];
+      updatedExercises = [...exercises, { ...exerciseData, id: uuidv4() }];
     }
     setExercises(updatedExercises);
     localStorage.setItem('exercises', JSON.stringify(updatedExercises));
@@ -57,7 +58,7 @@ function ExerciseList() {
   };
 
   const handleDeleteExercise = (exerciseToDelete) => {
-    const updatedExercises = exercises.filter(ex => ex.name !== exerciseToDelete.name);
+    const updatedExercises = exercises.filter(ex => ex.id !== exerciseToDelete.id);
     setExercises(updatedExercises);
     localStorage.setItem('exercises', JSON.stringify(updatedExercises));
   };
