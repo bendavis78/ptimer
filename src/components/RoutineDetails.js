@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Container, 
   Typography, 
@@ -16,9 +16,11 @@ import {
 
 function RoutineDetails() {
   const { routineName } = useParams();
+  const navigate = useNavigate();
   const decodedRoutineName = decodeURIComponent(routineName);
   const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
 
   useEffect(() => {
@@ -55,6 +57,18 @@ function RoutineDetails() {
     }
   };
 
+  const handleDeleteRoutine = () => {
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
+    const updatedRoutines = storedRoutines.filter(routine => routine.name !== decodedRoutineName);
+    localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
+    setDeleteConfirmOpen(false);
+    navigate('/');
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -67,8 +81,11 @@ function RoutineDetails() {
           </ListItem>
         ))}
       </List>
-      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2, mr: 2 }}>
         Add Exercise
+      </Button>
+      <Button variant="contained" color="error" onClick={handleDeleteRoutine} sx={{ mt: 2 }}>
+        Delete Routine
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add New Exercise</DialogTitle>
@@ -88,6 +105,16 @@ function RoutineDetails() {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAddExercise} data-testid="dialog-add-exercise-button">Add</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+        <DialogTitle>Delete Routine</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this routine? This action cannot be undone.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteConfirmOpen(false)}>Cancel</Button>
+          <Button onClick={confirmDelete} color="error">I'm sure</Button>
         </DialogActions>
       </Dialog>
     </Container>
