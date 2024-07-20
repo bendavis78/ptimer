@@ -16,17 +16,18 @@ import {
 
 function RoutineDetails() {
   const { routineName } = useParams();
+  const decodedRoutineName = decodeURIComponent(routineName);
   const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
 
   useEffect(() => {
     const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
-    const currentRoutine = storedRoutines.find(routine => routine.name === routineName);
+    const currentRoutine = storedRoutines.find(routine => routine.name === decodedRoutineName);
     if (currentRoutine && currentRoutine.exercises) {
       setExercises(currentRoutine.exercises);
     }
-  }, [routineName]);
+  }, [decodedRoutineName]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,7 +45,7 @@ function RoutineDetails() {
       
       const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
       const updatedRoutines = storedRoutines.map(routine => 
-        routine.name === routineName 
+        routine.name === decodedRoutineName 
           ? { ...routine, exercises: updatedExercises } 
           : routine
       );
@@ -57,7 +58,7 @@ function RoutineDetails() {
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        {decodeURIComponent(routineName)}
+        {decodedRoutineName}
       </Typography>
       <List>
         {exercises.map((exercise, index) => (
