@@ -13,6 +13,7 @@ import {
   DialogActions, 
   TextField 
 } from '@mui/material';
+import ExerciseModal from './ExerciseModal';
 
 function RoutineDetails() {
   const { routineName } = useParams();
@@ -22,6 +23,8 @@ function RoutineDetails() {
   const [open, setOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
+  const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState(null);
 
   useEffect(() => {
     const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
@@ -33,6 +36,33 @@ function RoutineDetails() {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleExerciseClick = (exercise) => {
+    setSelectedExercise(exercise);
+    setExerciseModalOpen(true);
+  };
+
+  const handleExerciseModalClose = () => {
+    setExerciseModalOpen(false);
+    setSelectedExercise(null);
+  };
+
+  const handleExerciseUpdate = (updatedExercise) => {
+    const updatedExercises = exercises.map(ex => 
+      ex.name === updatedExercise.name ? updatedExercise : ex
+    );
+    setExercises(updatedExercises);
+    
+    const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
+    const updatedRoutines = storedRoutines.map(routine => 
+      routine.name === decodedRoutineName 
+        ? { ...routine, exercises: updatedExercises } 
+        : routine
+    );
+    localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
+    
+    handleExerciseModalClose();
   };
 
   const handleClose = () => {
@@ -76,7 +106,7 @@ function RoutineDetails() {
       </Typography>
       <List>
         {exercises.map((exercise, index) => (
-          <ListItem key={index}>
+          <ListItem key={index} button onClick={() => handleExerciseClick(exercise)}>
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
@@ -117,6 +147,12 @@ function RoutineDetails() {
           <Button onClick={confirmDelete} color="error">I'm sure</Button>
         </DialogActions>
       </Dialog>
+      <ExerciseModal
+        open={exerciseModalOpen}
+        onClose={handleExerciseModalClose}
+        exercise={selectedExercise}
+        onUpdate={handleExerciseUpdate}
+      />
     </Container>
   );
 }
