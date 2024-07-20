@@ -4,18 +4,14 @@ import {
   ListItem, 
   ListItemText, 
   Typography, 
-  Button, 
-  TextField, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogTitle 
+  Button
 } from '@mui/material';
+import ExerciseModal from './ExerciseModal';
 
 function ExerciseList() {
   const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newExerciseName, setNewExerciseName] = useState('');
+  const [selectedExercise, setSelectedExercise] = useState(null);
 
   useEffect(() => {
     const storedExercises = localStorage.getItem('exercises');
@@ -25,21 +21,34 @@ function ExerciseList() {
   }, []);
 
   const handleClickOpen = () => {
+    setSelectedExercise(null);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setNewExerciseName('');
+    setSelectedExercise(null);
   };
 
-  const handleAddExercise = () => {
-    if (newExerciseName.trim() !== '') {
-      const updatedExercises = [...exercises, { name: newExerciseName.trim() }];
-      setExercises(updatedExercises);
-      localStorage.setItem('exercises', JSON.stringify(updatedExercises));
-      handleClose();
+  const handleExerciseClick = (exercise) => {
+    setSelectedExercise(exercise);
+    setOpen(true);
+  };
+
+  const handleSaveExercise = (exerciseData) => {
+    let updatedExercises;
+    if (selectedExercise) {
+      // Update existing exercise
+      updatedExercises = exercises.map(ex => 
+        ex.name === selectedExercise.name ? exerciseData : ex
+      );
+    } else {
+      // Add new exercise
+      updatedExercises = [...exercises, exerciseData];
     }
+    setExercises(updatedExercises);
+    localStorage.setItem('exercises', JSON.stringify(updatedExercises));
+    handleClose();
   };
 
   return (
@@ -49,7 +58,7 @@ function ExerciseList() {
       </Typography>
       <List>
         {exercises.map((exercise, index) => (
-          <ListItem key={index}>
+          <ListItem key={index} button onClick={() => handleExerciseClick(exercise)}>
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
@@ -57,26 +66,12 @@ function ExerciseList() {
       <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }}>
         Add Exercise
       </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Exercise</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Exercise Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newExerciseName}
-            onChange={(e) => setNewExerciseName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddExercise}>Add</Button>
-        </DialogActions>
-      </Dialog>
+      <ExerciseModal
+        open={open}
+        onClose={handleClose}
+        exercise={selectedExercise}
+        onUpdate={handleSaveExercise}
+      />
     </>
   );
 }
