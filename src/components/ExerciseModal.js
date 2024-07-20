@@ -13,6 +13,15 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
+import {
+  NECK_SHOULDERS,
+  BACK,
+  ARMS,
+  ABDOMINAL,
+  LEGS,
+  OTHER,
+  muscleGroupLabels,
+} from '../constants/muscleGroups';
 
 function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   const [name, setName] = useState('');
@@ -90,12 +99,11 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
               onChange={(e) => setMuscleGroup(e.target.value)}
               label="Muscle Group"
             >
-              <MenuItem value="Neck & shoulders">Neck & shoulders</MenuItem>
-              <MenuItem value="Back">Back</MenuItem>
-              <MenuItem value="Arms">Arms</MenuItem>
-              <MenuItem value="Abdominal">Abdominal</MenuItem>
-              <MenuItem value="Legs">Legs</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
+              {Object.entries(muscleGroupLabels).map(([value, label]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField
