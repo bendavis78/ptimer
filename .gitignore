@@ -1,3 +1,4 @@
 .aider*
 cypress/videos/*
 venv
+coverage
