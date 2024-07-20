@@ -57,7 +57,7 @@ function RoutineDetails() {
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        {routineName}
+        {decodeURIComponent(routineName)}
       </Typography>
       <List>
         {exercises.map((exercise, index) => (

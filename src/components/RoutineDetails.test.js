@@ -20,6 +20,7 @@ test('renders routine name', () => {
   renderWithRouter(<RoutineDetails />);
   const routineNameHeading = screen.getByRole('heading', { name: /Test Routine/i });
   expect(routineNameHeading).toBeInTheDocument();
+  expect(routineNameHeading).toBeInTheDocument();
 });
 
 test('displays empty exercise list', () => {
