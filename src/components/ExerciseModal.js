@@ -115,9 +115,18 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
             label="Bilateral"
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>
+        <DialogActions sx={{ justifyContent: 'space-between' }}>
+          <Button 
+            onClick={onClose} 
+            color="error" 
+            sx={{ visibility: exercise ? 'visible' : 'hidden' }}
+          >
+            Delete
+          </Button>
+          <div>
+            <Button onClick={onClose} sx={{ mr: 1 }}>Cancel</Button>
+            <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>
+          </div>
         </DialogActions>
       </form>
     </Dialog>
