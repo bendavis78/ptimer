@@ -76,6 +76,7 @@ function ExerciseList() {
         onClose={handleClose}
         exercise={selectedExercise}
         onUpdate={handleSaveExercise}
+        key={selectedExercise ? selectedExercise.name : 'new'}
       />
     </>
   );

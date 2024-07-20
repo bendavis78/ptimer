@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -18,23 +18,29 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
   const [holdTime, setHoldTime] = useState(0);
   const [bilateral, setBilateral] = useState(false);
 
+  const resetForm = useCallback(() => {
+    setName('');
+    setDescription('');
+    setSets(0);
+    setRepsPerSet(0);
+    setHoldTime(0);
+    setBilateral(false);
+  }, []);
+
   useEffect(() => {
-    if (exercise) {
-      setName(exercise.name || '');
-      setDescription(exercise.description || '');
-      setSets(exercise.sets || 0);
-      setRepsPerSet(exercise.repsPerSet || 0);
-      setHoldTime(exercise.holdTime || 0);
-      setBilateral(exercise.bilateral || false);
-    } else {
-      setName('');
-      setDescription('');
-      setSets(0);
-      setRepsPerSet(0);
-      setHoldTime(0);
-      setBilateral(false);
+    if (open) {
+      if (exercise) {
+        setName(exercise.name || '');
+        setDescription(exercise.description || '');
+        setSets(exercise.sets || 0);
+        setRepsPerSet(exercise.repsPerSet || 0);
+        setHoldTime(exercise.holdTime || 0);
+        setBilateral(exercise.bilateral || false);
+      } else {
+        resetForm();
+      }
     }
-  }, [exercise]);
+  }, [open, exercise, resetForm]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
