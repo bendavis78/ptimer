@@ -10,10 +10,8 @@ describe('Routine List', () => {
     // Wait for the dialog to be visible
     cy.get('.MuiDialog-paper').should('be.visible')
     cy.get('#name').type('My Test Routine')
-    // Increase wait time to 1000ms (1 second)
-    cy.wait(1000)
-    // Use a more specific selector for the Add button and force the click
-    cy.get('.MuiDialogActions-root button:contains("Add")').click({ force: true })
+    // Use a more specific selector for the Add button
+    cy.get('.MuiDialogActions-root button:contains("Add")').click()
     cy.contains('My Test Routine').should('be.visible')
   })
 })
