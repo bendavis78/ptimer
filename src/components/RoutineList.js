@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Container, 
   List, 
   ListItem, 
   ListItemText, 
@@ -38,7 +37,7 @@ function RoutineList() {
 
   const handleAddRoutine = () => {
     if (newRoutineName.trim() !== '') {
-      const updatedRoutines = [...routines, { name: newRoutineName.trim() }];
+      const updatedRoutines = [...routines, { name: newRoutineName.trim(), exercises: [] }];
       setRoutines(updatedRoutines);
       localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
       handleClose();
@@ -50,9 +49,9 @@ function RoutineList() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Workout Routines
+    <>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Routines
       </Typography>
       <List>
         {routines.map((routine, index) => (
@@ -88,7 +87,7 @@ function RoutineList() {
           <Button onClick={handleAddRoutine} data-testid="dialog-add-button">Add</Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </>
   );
 }
 
