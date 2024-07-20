@@ -30,6 +30,11 @@ function ExerciseList() {
     setSelectedExercise(null);
   };
 
+  const resetExerciseModal = () => {
+    setSelectedExercise(null);
+    setOpen(true);
+  };
+
   const handleExerciseClick = (exercise) => {
     setSelectedExercise(exercise);
     setOpen(true);
@@ -63,7 +68,7 @@ function ExerciseList() {
           </ListItem>
         ))}
       </List>
-      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={resetExerciseModal} sx={{ mt: 2 }}>
         Add Exercise
       </Button>
       <ExerciseModal

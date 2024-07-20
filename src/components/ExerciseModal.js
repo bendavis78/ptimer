@@ -26,6 +26,13 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
       setRepsPerSet(exercise.repsPerSet || 0);
       setHoldTime(exercise.holdTime || 0);
       setBilateral(exercise.bilateral || false);
+    } else {
+      setName('');
+      setDescription('');
+      setSets(0);
+      setRepsPerSet(0);
+      setHoldTime(0);
+      setBilateral(false);
     }
   }, [exercise]);
 
@@ -54,6 +61,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
             fullWidth
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
           />
           <TextField
             margin="dense"
@@ -103,7 +111,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>
         </DialogActions>
       </form>
     </Dialog>
