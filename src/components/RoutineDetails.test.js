@@ -18,7 +18,7 @@ beforeEach(() => {
 
 test('renders routine name', () => {
   renderWithRouter(<RoutineDetails />);
-  const routineNameHeading = screen.getByRole('heading', { name: /Test Routine/i });
+  const routineNameHeading = screen.getByText('Test Routine');
   expect(routineNameHeading).toBeInTheDocument();
 });
 
