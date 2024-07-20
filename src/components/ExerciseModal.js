@@ -10,7 +10,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
-function ExerciseModal({ open, onClose, exercise, onUpdate }) {
+function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [sets, setSets] = useState(0);
@@ -52,6 +52,11 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
       holdTime,
       bilateral,
     });
+  };
+
+  const handleDelete = () => {
+    onDelete(exercise);
+    onClose();
   };
 
   return (
@@ -117,7 +122,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button 
-            onClick={onClose} 
+            onClick={handleDelete} 
             color="error" 
             sx={{ visibility: exercise ? 'visible' : 'hidden' }}
           >

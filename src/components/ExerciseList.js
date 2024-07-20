@@ -56,6 +56,12 @@ function ExerciseList() {
     handleClose();
   };
 
+  const handleDeleteExercise = (exerciseToDelete) => {
+    const updatedExercises = exercises.filter(ex => ex.name !== exerciseToDelete.name);
+    setExercises(updatedExercises);
+    localStorage.setItem('exercises', JSON.stringify(updatedExercises));
+  };
+
   return (
     <>
       <Typography variant="h5" component="h2" gutterBottom>
@@ -76,6 +82,7 @@ function ExerciseList() {
         onClose={handleClose}
         exercise={selectedExercise}
         onUpdate={handleSaveExercise}
+        onDelete={handleDeleteExercise}
         key={selectedExercise ? selectedExercise.name : 'new'}
       />
     </>
