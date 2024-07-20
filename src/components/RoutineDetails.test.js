@@ -1,12 +1,17 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
-  window.history.pushState({}, 'Test page', route);
-  return render(ui, { wrapper: BrowserRouter });
+  return render(
+    <MemoryRouter initialEntries={[route]}>
+      <Routes>
+        <Route path="/routine/:routineName" element={ui} />
+      </Routes>
+    </MemoryRouter>
+  );
 };
 
 beforeEach(() => {
