@@ -8,6 +8,10 @@ import {
   Button,
   Switch,
   FormControlLabel,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 
 function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
@@ -17,6 +21,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
   const [repsPerSet, setRepsPerSet] = useState(0);
   const [holdTime, setHoldTime] = useState(0);
   const [bilateral, setBilateral] = useState(false);
+  const [muscleGroup, setMuscleGroup] = useState('');
 
   const resetForm = useCallback(() => {
     setName('');
@@ -25,6 +30,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
     setRepsPerSet(0);
     setHoldTime(0);
     setBilateral(false);
+    setMuscleGroup('');
   }, []);
 
   useEffect(() => {
@@ -36,6 +42,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
         setRepsPerSet(exercise.repsPerSet || 0);
         setHoldTime(exercise.holdTime || 0);
         setBilateral(exercise.bilateral || false);
+        setMuscleGroup(exercise.muscleGroup || '');
       } else {
         resetForm();
       }
@@ -51,6 +58,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
       repsPerSet,
       holdTime,
       bilateral,
+      muscleGroup,
     });
   };
 
@@ -119,6 +127,22 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
             }
             label="Bilateral"
           />
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="muscle-group-label">Muscle Group</InputLabel>
+            <Select
+              labelId="muscle-group-label"
+              value={muscleGroup}
+              onChange={(e) => setMuscleGroup(e.target.value)}
+              label="Muscle Group"
+            >
+              <MenuItem value="Neck & shoulders">Neck & shoulders</MenuItem>
+              <MenuItem value="Back">Back</MenuItem>
+              <MenuItem value="Arms">Arms</MenuItem>
+              <MenuItem value="Abdominal">Abdominal</MenuItem>
+              <MenuItem value="Legs">Legs</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button 
