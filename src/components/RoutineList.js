@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Container, 
   List, 
@@ -17,6 +18,7 @@ function RoutineList() {
   const [routines, setRoutines] = useState([]);
   const [open, setOpen] = useState(false);
   const [newRoutineName, setNewRoutineName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedRoutines = localStorage.getItem('workoutRoutines');
@@ -43,6 +45,10 @@ function RoutineList() {
     }
   };
 
+  const handleRoutineClick = (routineName) => {
+    navigate(`/routine/${encodeURIComponent(routineName)}`);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -50,7 +56,11 @@ function RoutineList() {
       </Typography>
       <List>
         {routines.map((routine, index) => (
-          <ListItem key={index}>
+          <ListItem 
+            key={index} 
+            button 
+            onClick={() => handleRoutineClick(routine.name)}
+          >
             <ListItemText primary={routine.name} />
           </ListItem>
         ))}
