@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import RoutineList from './RoutineList';
 
 test('renders Workout Routines title', () => {
@@ -24,7 +25,7 @@ test('adds a new routine when form is submitted', () => {
   const input = screen.getByLabelText(/Routine Name/i);
   fireEvent.change(input, { target: { value: 'My New Routine' } });
   
-  const submitButton = screen.getByText(/Add/i);
+  const submitButton = screen.getByTestId('dialog-add-button');
   fireEvent.click(submitButton);
 
   const newRoutine = screen.getByText(/My New Routine/i);

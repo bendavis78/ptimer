@@ -75,7 +75,7 @@ function RoutineList() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddRoutine}>Add</Button>
+          <Button onClick={handleAddRoutine} data-testid="dialog-add-button">Add</Button>
         </DialogActions>
       </Dialog>
     </Container>
