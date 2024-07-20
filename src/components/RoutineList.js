@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Container, 
   List, 
@@ -18,6 +18,13 @@ function RoutineList() {
   const [open, setOpen] = useState(false);
   const [newRoutineName, setNewRoutineName] = useState('');
 
+  useEffect(() => {
+    const storedRoutines = localStorage.getItem('workoutRoutines');
+    if (storedRoutines) {
+      setRoutines(JSON.parse(storedRoutines));
+    }
+  }, []);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -29,7 +36,9 @@ function RoutineList() {
 
   const handleAddRoutine = () => {
     if (newRoutineName.trim() !== '') {
-      setRoutines([...routines, { name: newRoutineName.trim() }]);
+      const updatedRoutines = [...routines, { name: newRoutineName.trim() }];
+      setRoutines(updatedRoutines);
+      localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
       handleClose();
     }
   };
