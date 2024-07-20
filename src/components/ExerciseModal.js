@@ -82,6 +82,22 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
             onChange={(e) => setName(e.target.value)}
             required
           />
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="muscle-group-label">Muscle Group</InputLabel>
+            <Select
+              labelId="muscle-group-label"
+              value={muscleGroup}
+              onChange={(e) => setMuscleGroup(e.target.value)}
+              label="Muscle Group"
+            >
+              <MenuItem value="Neck & shoulders">Neck & shoulders</MenuItem>
+              <MenuItem value="Back">Back</MenuItem>
+              <MenuItem value="Arms">Arms</MenuItem>
+              <MenuItem value="Abdominal">Abdominal</MenuItem>
+              <MenuItem value="Legs">Legs</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             margin="dense"
             label="Description"
@@ -127,22 +143,6 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
             }
             label="Bilateral"
           />
-          <FormControl fullWidth margin="dense">
-            <InputLabel id="muscle-group-label">Muscle Group</InputLabel>
-            <Select
-              labelId="muscle-group-label"
-              value={muscleGroup}
-              onChange={(e) => setMuscleGroup(e.target.value)}
-              label="Muscle Group"
-            >
-              <MenuItem value="Neck & shoulders">Neck & shoulders</MenuItem>
-              <MenuItem value="Back">Back</MenuItem>
-              <MenuItem value="Arms">Arms</MenuItem>
-              <MenuItem value="Abdominal">Abdominal</MenuItem>
-              <MenuItem value="Legs">Legs</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
-            </Select>
-          </FormControl>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button 
