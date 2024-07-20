@@ -65,30 +65,32 @@ function ExerciseModal({ open, onClose, exercise, onUpdate }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <TextField
-            margin="dense"
-            label="Sets"
-            type="number"
-            fullWidth
-            value={sets}
-            onChange={(e) => setSets(Number(e.target.value))}
-          />
-          <TextField
-            margin="dense"
-            label="Reps per Set"
-            type="number"
-            fullWidth
-            value={repsPerSet}
-            onChange={(e) => setRepsPerSet(Number(e.target.value))}
-          />
-          <TextField
-            margin="dense"
-            label="Hold Time (seconds)"
-            type="number"
-            fullWidth
-            value={holdTime}
-            onChange={(e) => setHoldTime(Number(e.target.value))}
-          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+            <TextField
+              margin="dense"
+              label="Sets"
+              type="number"
+              value={sets}
+              onChange={(e) => setSets(Number(e.target.value))}
+              style={{ flex: 1 }}
+            />
+            <TextField
+              margin="dense"
+              label="Reps per Set"
+              type="number"
+              value={repsPerSet}
+              onChange={(e) => setRepsPerSet(Number(e.target.value))}
+              style={{ flex: 1 }}
+            />
+            <TextField
+              margin="dense"
+              label="Hold Time (s)"
+              type="number"
+              value={holdTime}
+              onChange={(e) => setHoldTime(Number(e.target.value))}
+              style={{ flex: 1 }}
+            />
+          </div>
           <FormControlLabel
             control={
               <Switch
