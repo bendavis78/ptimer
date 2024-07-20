@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Tabs, Tab, Box } from '@mui/material';
 import RoutineList from './RoutineList';
 import ExerciseList from './ExerciseList';
 
 function Home() {
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(() => {
+    const savedTab = localStorage.getItem('selectedTab');
+    return savedTab !== null ? parseInt(savedTab, 10) : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedTab', tabValue.toString());
+  }, [tabValue]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
