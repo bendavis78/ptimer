@@ -5,7 +5,7 @@ import ExerciseModal from './ExerciseModal';
 import { muscleGroupLabels } from '../constants/muscleGroups';
 
 const mockExercise = {
-  _id: 'exercise_1',
+  _id: 'test-id-1',
   name: 'Push-ups',
   description: 'Basic push-ups',
   sets: 3,

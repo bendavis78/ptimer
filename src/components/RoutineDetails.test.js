@@ -30,7 +30,7 @@ describe('RoutineDetails', () => {
 
     // Mock the getRoutines function to return a test routine
     db.getRoutines.mockResolvedValue([
-      { id: '1', name: 'Test Routine', exercises: [] }
+      { id: 'test-id-1', name: 'Test Routine', exercises: [] }
     ]);
 
     // Mock the getExercises function to return an empty array
