@@ -35,7 +35,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   // Clean up after all tests
-  await db.delete();
+  await db.close();
 });
 
 test('renders routine name', async () => {
