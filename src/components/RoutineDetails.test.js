@@ -38,11 +38,6 @@ afterAll(async () => {
   await db.delete();
 });
 
-// Configure fake-indexeddb before running tests
-beforeAll(() => {
-  indexedDB = new IDBFactory();
-});
-
 test('renders routine name', async () => {
   await act(async () => {
     renderWithRouter(<RoutineDetails />);
