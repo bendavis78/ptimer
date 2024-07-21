@@ -18,7 +18,7 @@ const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
 
 beforeEach(async () => {
   // Reset indexedDB
-  indexedDB = new IDBFactory();
+  global.indexedDB = new IDBFactory();
   
   // Reset the Dexie instance
   await db.delete();
