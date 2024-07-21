@@ -3,7 +3,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
-import { IDBFactory } from 'fake-indexeddb';
+import 'fake-indexeddb/auto';
 import { db } from '../utils/db';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
@@ -17,10 +17,7 @@ const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
 };
 
 beforeEach(async () => {
-  // Reset indexedDB
-  global.indexedDB = new IDBFactory();
-  
-  // Reset the Dexie instance
+  // Clear the database before each test
   await db.delete();
   await db.open();
 
