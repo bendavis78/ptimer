@@ -12,6 +12,7 @@ import {
   DialogContent, 
   DialogTitle 
 } from '@mui/material';
+import { getRoutines, addRoutine } from '../utils/indexedDB';
 
 function RoutineList() {
   const [routines, setRoutines] = useState([]);
@@ -20,10 +21,15 @@ function RoutineList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedRoutines = localStorage.getItem('workoutRoutines');
-    if (storedRoutines) {
-      setRoutines(JSON.parse(storedRoutines));
-    }
+    const fetchRoutines = async () => {
+      try {
+        const fetchedRoutines = await getRoutines();
+        setRoutines(fetchedRoutines);
+      } catch (error) {
+        console.error('Failed to fetch routines:', error);
+      }
+    };
+    fetchRoutines();
   }, []);
 
   const handleClickOpen = () => {
@@ -35,12 +41,16 @@ function RoutineList() {
     setNewRoutineName('');
   };
 
-  const handleAddRoutine = () => {
+  const handleAddRoutine = async () => {
     if (newRoutineName.trim() !== '') {
-      const updatedRoutines = [...routines, { name: newRoutineName.trim(), exercises: [] }];
-      setRoutines(updatedRoutines);
-      localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
-      handleClose();
+      const newRoutine = { name: newRoutineName.trim(), exercises: [] };
+      try {
+        await addRoutine(newRoutine);
+        setRoutines([...routines, newRoutine]);
+        handleClose();
+      } catch (error) {
+        console.error('Failed to add routine:', error);
+      }
     }
   };
 
