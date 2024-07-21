@@ -3,6 +3,8 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
+import { IDBFactory } from 'fake-indexeddb';
+import { db } from '../utils/db';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   return render(
@@ -14,27 +16,39 @@ const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   );
 };
 
-beforeEach(() => {
-  localStorage.clear();
-  localStorage.setItem('workoutRoutines', JSON.stringify([
-    { name: 'Test Routine', exercises: [] }
-  ]));
+beforeEach(async () => {
+  // Reset indexedDB
+  indexedDB = new IDBFactory();
+  
+  // Reset the Dexie instance
+  await db.delete();
+  await db.open();
+
+  // Add a test routine
+  await db.routines.add({ name: 'Test Routine', exercises: [] });
 });
 
-test('renders routine name', () => {
-  renderWithRouter(<RoutineDetails />);
+test('renders routine name', async () => {
+  await act(async () => {
+    renderWithRouter(<RoutineDetails />);
+  });
   const routineNameHeading = screen.getByText('Test Routine');
   expect(routineNameHeading).toBeInTheDocument();
 });
 
-test('displays empty exercise list', () => {
-  renderWithRouter(<RoutineDetails />);
+test('displays empty exercise list', async () => {
+  await act(async () => {
+    renderWithRouter(<RoutineDetails />);
+  });
   const exerciseList = screen.queryAllByRole('listitem');
   expect(exerciseList).toHaveLength(0);
 });
 
 test('adds a new exercise', async () => {
-  renderWithRouter(<RoutineDetails />);
+  await act(async () => {
+    renderWithRouter(<RoutineDetails />);
+  });
+  
   const addExerciseButton = screen.getByText(/Add Exercise/i);
   fireEvent.click(addExerciseButton);
 
@@ -46,6 +60,6 @@ test('adds a new exercise', async () => {
     fireEvent.click(addExerciseDialogButton);
   });
 
-  const newExercise = screen.getByText(/Push-ups/i);
+  const newExercise = await screen.findByText(/Push-ups/i);
   expect(newExercise).toBeInTheDocument();
 });
