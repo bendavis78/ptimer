@@ -58,7 +58,7 @@ function ExerciseList() {
 
   const handleDeleteExercise = async (exerciseToDelete) => {
     try {
-      await deleteExercise(exerciseToDelete.id);
+      await deleteExercise(exerciseToDelete._id);
       await fetchExercises();
       handleClose();
     } catch (error) {
@@ -71,9 +71,9 @@ function ExerciseList() {
       <Typography variant="h5" component="h2" gutterBottom>
         Exercises
       </Typography>
-      <List>
+      <List data-testid="exercise-list">
         {exercises.map((exercise) => (
-          <ListItem key={exercise.id} button onClick={() => handleExerciseClick(exercise)}>
+          <ListItem key={exercise._id} button onClick={() => handleExerciseClick(exercise)} data-testid="exercise-item">
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
