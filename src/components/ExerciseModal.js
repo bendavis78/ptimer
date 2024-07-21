@@ -120,6 +120,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
                   value={localExercise.muscleGroup}
                   onChange={handleChange}
                   label="Muscle Group"
+                  data-testid="muscle-group-select"
                 >
                   {Object.entries(muscleGroupLabels).map(([value, label]) => (
                     <MenuItem key={value} value={value}>
