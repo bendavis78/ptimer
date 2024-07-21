@@ -5,7 +5,7 @@ import ExerciseModal from './ExerciseModal';
 import { muscleGroupLabels } from '../constants/muscleGroups';
 
 const mockExercise = {
-  id: '1',
+  _id: 'exercise_1',
   name: 'Push-ups',
   description: 'Basic push-ups',
   sets: 3,
@@ -64,7 +64,7 @@ describe('ExerciseModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Add' }));
     
     expect(mockOnUpdate).toHaveBeenCalledWith({
-      id: '',
+      _id: '',
       name: 'Squats',
       description: 'Basic squats',
       sets: 4,

@@ -20,7 +20,7 @@ import {
 
 function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineExercise = false }) {
   const [localExercise, setLocalExercise] = useState({
-    id: '',
+    _id: '',
     name: '',
     description: '',
     sets: '',
@@ -33,7 +33,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
   useEffect(() => {
     if (open && exercise) {
       setLocalExercise({
-        id: exercise.id || '',
+        _id: exercise._id || '',
         name: exercise.name || '',
         description: exercise.description || '',
         sets: exercise.sets?.toString() || '',
@@ -44,7 +44,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
       });
     } else {
       setLocalExercise({
-        id: '',
+        _id: '',
         name: '',
         description: '',
         sets: '',
