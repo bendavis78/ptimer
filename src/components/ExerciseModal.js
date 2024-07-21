@@ -163,6 +163,14 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
           />
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
+          {exercise && !isRoutineExercise && (
+            <Button 
+              onClick={handleDelete} 
+              color="error"
+            >
+              Delete
+            </Button>
+          )}
           {isRoutineExercise && (
             <Button 
               onClick={handleDelete} 
@@ -173,7 +181,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
           )}
           <div>
             <Button onClick={onClose} sx={{ mr: 1 }}>Cancel</Button>
-            {!isRoutineExercise && <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>}
+            <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>
           </div>
         </DialogActions>
       </form>

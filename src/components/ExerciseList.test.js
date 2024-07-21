@@ -124,6 +124,10 @@ test('deletes an existing exercise', async () => {
   const deleteButton = await screen.findByRole('button', { name: /Delete/i });
   fireEvent.click(deleteButton);
 
+  // Close the modal
+  const closeButton = await screen.findByRole('button', { name: /Cancel/i });
+  fireEvent.click(closeButton);
+
   await waitFor(() => {
     expect(db.deleteExercise).toHaveBeenCalledWith('1');
   });
