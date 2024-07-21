@@ -3,8 +3,11 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
-import 'fake-indexeddb/auto';
 import { db } from '../utils/db';
+
+// Import and configure fake-indexeddb
+import 'fake-indexeddb/auto';
+import { IDBFactory } from 'fake-indexeddb';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   return render(
@@ -16,6 +19,11 @@ const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   );
 };
 
+beforeAll(() => {
+  // Set up the fake IndexedDB
+  global.indexedDB = new IDBFactory();
+});
+
 beforeEach(async () => {
   // Clear the database before each test
   await db.delete();
@@ -23,6 +31,11 @@ beforeEach(async () => {
 
   // Add a test routine
   await db.routines.add({ name: 'Test Routine', exercises: [] });
+});
+
+afterAll(async () => {
+  // Clean up after all tests
+  await db.delete();
 });
 
 test('renders routine name', async () => {
