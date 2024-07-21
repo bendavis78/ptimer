@@ -56,6 +56,15 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
     }
   }, [open, exercise]);
 
+  useEffect(() => {
+    if (open && exercise) {
+      setLocalExercise(prevState => ({
+        ...prevState,
+        muscleGroup: exercise.muscleGroup || '',
+      }));
+    }
+  }, [open, exercise]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setLocalExercise(prev => ({
