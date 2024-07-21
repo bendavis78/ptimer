@@ -39,7 +39,7 @@ describe('ExerciseModal', () => {
     
     expect(screen.getByText('Edit Exercise')).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /name/i })).toHaveValue('Push-ups');
-    expect(screen.getByLabelText(/muscle group/i)).toHaveTextContent('Arms');
+    expect(screen.getByLabelText(/muscle group/i)).toHaveValue('ARMS');
     expect(screen.getByRole('textbox', { name: /description/i })).toHaveValue('Basic push-ups');
     expect(screen.getByRole('spinbutton', { name: /sets/i })).toHaveValue(3);
     expect(screen.getByRole('spinbutton', { name: /reps per set/i })).toHaveValue(10);
@@ -64,7 +64,7 @@ describe('ExerciseModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Add' }));
     
     expect(mockOnUpdate).toHaveBeenCalledWith({
-      id: expect.any(String),
+      id: '',
       name: 'Squats',
       description: 'Basic squats',
       sets: 4,

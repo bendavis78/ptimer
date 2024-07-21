@@ -19,20 +19,16 @@ import {
 } from '../constants/muscleGroups';
 
 function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineExercise = false }) {
-  const [localExercise, setLocalExercise] = useState({});
-
-  const resetForm = useCallback(() => {
-    setLocalExercise({
-      id: '',
-      name: '',
-      description: '',
-      sets: 0,
-      repsPerSet: 0,
-      holdTime: 0,
-      bilateral: false,
-      muscleGroup: '',
-    });
-  }, []);
+  const [localExercise, setLocalExercise] = useState({
+    id: '',
+    name: '',
+    description: '',
+    sets: '',
+    repsPerSet: '',
+    holdTime: '',
+    bilateral: false,
+    muscleGroup: '',
+  });
 
   useEffect(() => {
     if (open && exercise) {
@@ -40,16 +36,25 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
         id: exercise.id || '',
         name: exercise.name || '',
         description: exercise.description || '',
-        sets: exercise.sets || 0,
-        repsPerSet: exercise.repsPerSet || 0,
-        holdTime: exercise.holdTime || 0,
+        sets: exercise.sets?.toString() || '',
+        repsPerSet: exercise.repsPerSet?.toString() || '',
+        holdTime: exercise.holdTime?.toString() || '',
         bilateral: exercise.bilateral || false,
         muscleGroup: exercise.muscleGroup || '',
       });
     } else {
-      resetForm();
+      setLocalExercise({
+        id: '',
+        name: '',
+        description: '',
+        sets: '',
+        repsPerSet: '',
+        holdTime: '',
+        bilateral: false,
+        muscleGroup: '',
+      });
     }
-  }, [open, exercise, resetForm]);
+  }, [open, exercise]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -61,7 +66,12 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(localExercise);
+    onUpdate({
+      ...localExercise,
+      sets: parseInt(localExercise.sets, 10) || 0,
+      repsPerSet: parseInt(localExercise.repsPerSet, 10) || 0,
+      holdTime: parseInt(localExercise.holdTime, 10) || 0,
+    });
   };
 
   const handleDelete = () => {
