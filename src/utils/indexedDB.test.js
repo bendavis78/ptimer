@@ -1,10 +1,21 @@
 import "fake-indexeddb/auto";
 import * as indexedDBModule from './indexedDB';
 
+// Polyfill for structuredClone
+if (typeof structuredClone !== "function") {
+  global.structuredClone = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+  };
+}
+
 describe('indexedDB utility functions', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset the database before each test
-    indexedDB.deleteDatabase("WorkoutRoutineDB");
+    await new Promise((resolve) => {
+      const request = indexedDB.deleteDatabase("WorkoutRoutineAppDB");
+      request.onsuccess = resolve;
+      request.onerror = resolve;
+    });
   });
 
   test('getRoutines fetches all routines', async () => {
