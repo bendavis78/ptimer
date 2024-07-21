@@ -25,7 +25,7 @@ describe('ExerciseModal', () => {
     
     expect(screen.getByText('Add Exercise')).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /name/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /muscle group/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/muscle group/i)).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /description/i })).toBeInTheDocument();
     expect(screen.getByRole('spinbutton', { name: /sets/i })).toBeInTheDocument();
     expect(screen.getByRole('spinbutton', { name: /reps per set/i })).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('ExerciseModal', () => {
     
     expect(screen.getByText('Edit Exercise')).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: /name/i })).toHaveValue('Push-ups');
-    expect(screen.getByRole('button', { name: /muscle group/i })).toHaveTextContent('Arms');
+    expect(screen.getByLabelText(/muscle group/i)).toHaveTextContent('Arms');
     expect(screen.getByRole('textbox', { name: /description/i })).toHaveValue('Basic push-ups');
     expect(screen.getByRole('spinbutton', { name: /sets/i })).toHaveValue(3);
     expect(screen.getByRole('spinbutton', { name: /reps per set/i })).toHaveValue(10);
@@ -53,8 +53,8 @@ describe('ExerciseModal', () => {
     render(<ExerciseModal open={true} onClose={mockOnClose} onUpdate={mockOnUpdate} onDelete={mockOnDelete} />);
     
     fireEvent.change(screen.getByRole('textbox', { name: /name/i }), { target: { value: 'Squats' } });
-    fireEvent.mouseDown(screen.getByRole('button', { name: /muscle group/i }));
-    fireEvent.click(screen.getByRole('option', { name: /legs/i }));
+    fireEvent.mouseDown(screen.getByLabelText(/muscle group/i));
+    fireEvent.click(screen.getByText(/legs/i));
     fireEvent.change(screen.getByRole('textbox', { name: /description/i }), { target: { value: 'Basic squats' } });
     fireEvent.change(screen.getByRole('spinbutton', { name: /sets/i }), { target: { value: '4' } });
     fireEvent.change(screen.getByRole('spinbutton', { name: /reps per set/i }), { target: { value: '12' } });
