@@ -49,8 +49,8 @@ describe('Home component', () => {
     renderWithRouter(<Home />);
 
     // Check if ExerciseList is still displayed
-    const exerciseList = screen.queryByTestId('exercise-list');
-    expect(exerciseList).not.toBeNull();
-    expect(exerciseList).toBeInTheDocument();
+    const exerciseLists = screen.getAllByTestId('exercise-list');
+    expect(exerciseLists.length).toBeGreaterThan(0);
+    expect(exerciseLists[0]).toBeInTheDocument();
   });
 });
