@@ -78,7 +78,7 @@ function ExerciseList() {
           </ListItem>
         ))}
       </List>
-      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }} data-testid="add-exercise-button">
         Add Exercise
       </Button>
       <ExerciseModal
