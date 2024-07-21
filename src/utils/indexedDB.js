@@ -101,8 +101,13 @@ export const updateExercise = async (exercise) => {
     const store = transaction.objectStore(EXERCISE_STORE);
     const request = store.put(exercise);
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(exercise);
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+    request.onsuccess = () => {
+      resolve(exercise);
+    };
 
     transaction.oncomplete = () => {
       db.close();
@@ -117,8 +122,13 @@ export const deleteExercise = async (exerciseId) => {
     const store = transaction.objectStore(EXERCISE_STORE);
     const request = store.delete(exerciseId);
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve();
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+    request.onsuccess = () => {
+      resolve();
+    };
 
     transaction.oncomplete = () => {
       db.close();
