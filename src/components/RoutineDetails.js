@@ -75,16 +75,20 @@ function RoutineDetails() {
     setNewExerciseName('');
   };
 
-  const handleAddExercise = () => {
+  const handleAddExercise = async () => {
     if (newExerciseName.trim() !== '') {
       const newExercise = { id: uuidv4(), name: newExerciseName.trim() };
       const updatedExercises = [...exercises, newExercise];
       setExercises(updatedExercises);
       
-      const routines = await getRoutines();
-      const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
-      if (currentRoutine) {
-        await updateRoutine(currentRoutine.id, { ...currentRoutine, exercises: updatedExercises });
+      try {
+        const routines = await getRoutines();
+        const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
+        if (currentRoutine) {
+          await updateRoutine(currentRoutine.id, { ...currentRoutine, exercises: updatedExercises });
+        }
+      } catch (error) {
+        console.error('Failed to update routine:', error);
       }
       
       handleClose();
