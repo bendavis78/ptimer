@@ -112,6 +112,11 @@ export const updateExercise = async (exercise) => {
     transaction.oncomplete = () => {
       db.close();
     };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
+    };
   });
 };
 
@@ -132,6 +137,11 @@ export const deleteExercise = async (exerciseId) => {
 
     transaction.oncomplete = () => {
       db.close();
+    };
+
+    transaction.onerror = () => {
+      db.close();
+      reject(transaction.error);
     };
   });
 };
