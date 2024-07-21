@@ -20,10 +20,8 @@ describe('indexedDB utility functions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     indexedDBMock.open.mockReturnValue({
-      onerror: null,
-      onsuccess: null,
-      onupgradeneeded: null,
       result: dbMock,
+      onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
     });
   });
 
@@ -32,10 +30,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         getAll: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = mockRoutines;
-          },
+          result: mockRoutines,
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -49,10 +45,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         add: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -66,10 +60,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         put: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -83,10 +75,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         delete: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -100,10 +90,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         getAll: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = mockExercises;
-          },
+          result: mockExercises,
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -117,10 +105,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         add: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -134,10 +120,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         put: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
@@ -151,10 +135,8 @@ describe('indexedDB utility functions', () => {
     dbMock.transaction.mockReturnValue({
       objectStore: jest.fn().mockReturnValue({
         delete: jest.fn().mockReturnValue({
-          onerror: null,
-          onsuccess: function() {
-            this.result = 'success';
-          },
+          result: 'success',
+          onsuccess: jest.fn().mockImplementation(function() { this.onsuccess(); }),
         }),
       }),
     });
