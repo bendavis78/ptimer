@@ -7,7 +7,7 @@ import {
   Button
 } from '@mui/material';
 import ExerciseModal from './ExerciseModal';
-import { getExercises, addExercise, updateExercise, deleteExercise } from '../utils/indexedDB';
+import { getExercises, addExercise, updateExercise, deleteExercise } from '../utils/db';
 
 function ExerciseList() {
   const [exercises, setExercises] = useState([]);

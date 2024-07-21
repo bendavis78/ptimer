@@ -2,10 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ExerciseList from './ExerciseList';
-import * as indexedDB from '../utils/indexedDB';
+import * as db from '../utils/db';
 
-// Mock the indexedDB functions
-jest.mock('../utils/indexedDB', () => ({
+// Mock the db functions
+jest.mock('../utils/db', () => ({
   getExercises: jest.fn(),
   addExercise: jest.fn(),
   updateExercise: jest.fn(),
@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test('renders Exercises title', async () => {
-  indexedDB.getExercises.mockResolvedValue([]);
+  db.getExercises.mockResolvedValue([]);
   render(<ExerciseList />);
   const titleElement = await screen.findByText(/Exercises/i);
   expect(titleElement).toBeInTheDocument();
@@ -29,7 +29,7 @@ test('displays exercises from IndexedDB', async () => {
     { id: '1', name: 'Push-ups' },
     { id: '2', name: 'Squats' },
   ];
-  indexedDB.getExercises.mockResolvedValue(mockExercises);
+  db.getExercises.mockResolvedValue(mockExercises);
 
   render(<ExerciseList />);
 
@@ -51,8 +51,8 @@ test('opens modal when Add Exercise button is clicked', async () => {
 });
 
 test('adds a new exercise', async () => {
-  indexedDB.getExercises.mockResolvedValue([]);
-  indexedDB.addExercise.mockResolvedValue();
+  db.getExercises.mockResolvedValue([]);
+  db.addExercise.mockResolvedValue();
 
   render(<ExerciseList />);
 
@@ -66,7 +66,7 @@ test('adds a new exercise', async () => {
   fireEvent.click(saveButton);
 
   await waitFor(() => {
-    expect(indexedDB.addExercise).toHaveBeenCalledWith(expect.objectContaining({
+    expect(db.addExercise).toHaveBeenCalledWith(expect.objectContaining({
       name: 'New Exercise',
     }));
   });
@@ -74,7 +74,7 @@ test('adds a new exercise', async () => {
 
 test('opens modal with exercise data when exercise is clicked', async () => {
   const mockExercise = { id: '1', name: 'Push-ups', description: 'Basic push-ups' };
-  indexedDB.getExercises.mockResolvedValue([mockExercise]);
+  db.getExercises.mockResolvedValue([mockExercise]);
 
   render(<ExerciseList />);
 
@@ -89,8 +89,8 @@ test('opens modal with exercise data when exercise is clicked', async () => {
 
 test('updates an existing exercise', async () => {
   const mockExercise = { id: '1', name: 'Push-ups', description: 'Basic push-ups' };
-  indexedDB.getExercises.mockResolvedValue([mockExercise]);
-  indexedDB.updateExercise.mockResolvedValue();
+  db.getExercises.mockResolvedValue([mockExercise]);
+  db.updateExercise.mockResolvedValue();
 
   render(<ExerciseList />);
 
@@ -104,7 +104,7 @@ test('updates an existing exercise', async () => {
   fireEvent.click(saveButton);
 
   await waitFor(() => {
-    expect(indexedDB.updateExercise).toHaveBeenCalledWith(expect.objectContaining({
+    expect(db.updateExercise).toHaveBeenCalledWith('1', expect.objectContaining({
       id: '1',
       name: 'Advanced Push-ups',
     }));
@@ -113,8 +113,8 @@ test('updates an existing exercise', async () => {
 
 test('deletes an existing exercise', async () => {
   const mockExercise = { id: '1', name: 'Push-ups' };
-  indexedDB.getExercises.mockResolvedValue([mockExercise]);
-  indexedDB.deleteExercise.mockResolvedValue();
+  db.getExercises.mockResolvedValue([mockExercise]);
+  db.deleteExercise.mockResolvedValue();
 
   render(<ExerciseList />);
 
@@ -125,6 +125,6 @@ test('deletes an existing exercise', async () => {
   fireEvent.click(deleteButton);
 
   await waitFor(() => {
-    expect(indexedDB.deleteExercise).toHaveBeenCalledWith('1');
+    expect(db.deleteExercise).toHaveBeenCalledWith('1');
   });
 });

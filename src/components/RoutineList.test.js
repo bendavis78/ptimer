@@ -3,10 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import RoutineList from './RoutineList';
-import * as indexedDB from '../utils/indexedDB';
+import * as db from '../utils/db';
 
-// Mock the indexedDB functions
-jest.mock('../utils/indexedDB', () => ({
+// Mock the db functions
+jest.mock('../utils/db', () => ({
   getRoutines: jest.fn(),
   addRoutine: jest.fn(),
 }));
@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 test('renders Routines title', async () => {
-  indexedDB.getRoutines.mockResolvedValue([]);
+  db.getRoutines.mockResolvedValue([]);
   renderWithRouter(<RoutineList />);
   const titleElement = await screen.findByText(/Routines/i);
   expect(titleElement).toBeInTheDocument();
@@ -38,8 +38,8 @@ test('opens dialog when Add Routine button is clicked', async () => {
 });
 
 test('adds a new routine when form is submitted', async () => {
-  indexedDB.getRoutines.mockResolvedValue([]);
-  indexedDB.addRoutine.mockResolvedValue();
+  db.getRoutines.mockResolvedValue([]);
+  db.addRoutine.mockResolvedValue();
   renderWithRouter(<RoutineList />);
   
   const addButton = await screen.findByText(/Add Routine/i);
@@ -52,7 +52,7 @@ test('adds a new routine when form is submitted', async () => {
   fireEvent.click(submitButton);
 
   await waitFor(() => {
-    expect(indexedDB.addRoutine).toHaveBeenCalledWith(expect.objectContaining({
+    expect(db.addRoutine).toHaveBeenCalledWith(expect.objectContaining({
       name: 'My New Routine',
       exercises: []
     }));
@@ -61,7 +61,7 @@ test('adds a new routine when form is submitted', async () => {
 
 test('navigates to routine details when a routine is clicked', async () => {
   const testRoutine = { name: 'Test Routine', exercises: [] };
-  indexedDB.getRoutines.mockResolvedValue([testRoutine]);
+  db.getRoutines.mockResolvedValue([testRoutine]);
   renderWithRouter(<RoutineList />);
 
   const routineItem = await screen.findByText(/Test Routine/i);

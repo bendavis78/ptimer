@@ -12,7 +12,7 @@ import {
   DialogContent, 
   DialogTitle 
 } from '@mui/material';
-import { getRoutines, addRoutine } from '../utils/indexedDB';
+import { getRoutines, addRoutine } from '../utils/db';
 
 function RoutineList() {
   const [routines, setRoutines] = useState([]);

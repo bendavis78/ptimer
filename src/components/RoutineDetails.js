@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { getRoutines, updateRoutine, deleteRoutine } from '../utils/db';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Container, 
@@ -28,11 +29,14 @@ function RoutineDetails() {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   useEffect(() => {
-    const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
-    const currentRoutine = storedRoutines.find(routine => routine.name === decodedRoutineName);
-    if (currentRoutine && currentRoutine.exercises) {
-      setExercises(currentRoutine.exercises);
-    }
+    const fetchRoutine = async () => {
+      const routines = await getRoutines();
+      const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
+      if (currentRoutine && currentRoutine.exercises) {
+        setExercises(currentRoutine.exercises);
+      }
+    };
+    fetchRoutine();
   }, [decodedRoutineName]);
 
   const handleClickOpen = () => {
@@ -73,16 +77,15 @@ function RoutineDetails() {
 
   const handleAddExercise = () => {
     if (newExerciseName.trim() !== '') {
-      const updatedExercises = [...exercises, { id: uuidv4(), name: newExerciseName.trim() }];
+      const newExercise = { id: uuidv4(), name: newExerciseName.trim() };
+      const updatedExercises = [...exercises, newExercise];
       setExercises(updatedExercises);
       
-      const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
-      const updatedRoutines = storedRoutines.map(routine => 
-        routine.name === decodedRoutineName 
-          ? { ...routine, exercises: updatedExercises } 
-          : routine
-      );
-      localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
+      const routines = await getRoutines();
+      const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
+      if (currentRoutine) {
+        await updateRoutine(currentRoutine.id, { ...currentRoutine, exercises: updatedExercises });
+      }
       
       handleClose();
     }
@@ -93,9 +96,11 @@ function RoutineDetails() {
   };
 
   const confirmDelete = () => {
-    const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
-    const updatedRoutines = storedRoutines.filter(routine => routine.name !== decodedRoutineName);
-    localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
+    const routines = await getRoutines();
+    const routineToDelete = routines.find(routine => routine.name === decodedRoutineName);
+    if (routineToDelete) {
+      await deleteRoutine(routineToDelete.id);
+    }
     setDeleteConfirmOpen(false);
     navigate('/');
   };
