@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import RoutineList from './RoutineList';
 import * as db from '../utils/db';
 
@@ -11,10 +11,20 @@ jest.mock('../utils/db', () => ({
   addRoutine: jest.fn(),
 }));
 
+// Mock useNavigate
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
 const renderWithRouter = (ui, { route = '/' } = {}) => {
   return render(
     <MemoryRouter initialEntries={[route]}>
-      {ui}
+      <Routes>
+        <Route path="/" element={ui} />
+        <Route path="/routine/:routineName" element={<div>Routine Details</div>} />
+      </Routes>
     </MemoryRouter>
   );
 };
@@ -65,12 +75,12 @@ test('adds a new routine when form is submitted', async () => {
 test('navigates to routine details when a routine is clicked', async () => {
   const testRoutine = { name: 'Test Routine', exercises: [] };
   db.getRoutines.mockResolvedValue([testRoutine]);
-  const { history } = renderWithRouter(<RoutineList />);
+  renderWithRouter(<RoutineList />);
 
   const routineItem = await screen.findByText(/Test Routine/i);
   fireEvent.click(routineItem);
 
   await waitFor(() => {
-    expect(history.location.pathname).toBe('/routine/Test%20Routine');
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/routine/Test%20Routine');
   });
 });
