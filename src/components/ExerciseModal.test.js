@@ -24,13 +24,13 @@ describe('ExerciseModal', () => {
     render(<ExerciseModal open={true} onClose={mockOnClose} onUpdate={mockOnUpdate} onDelete={mockOnDelete} />);
     
     expect(screen.getByText('Add Exercise')).toBeInTheDocument();
-    expect(screen.getByLabelText('Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Muscle Group')).toBeInTheDocument();
-    expect(screen.getByLabelText('Description')).toBeInTheDocument();
-    expect(screen.getByLabelText('Sets')).toBeInTheDocument();
-    expect(screen.getByLabelText('Reps per Set')).toBeInTheDocument();
-    expect(screen.getByLabelText('Hold Time (s)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Bilateral')).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /name/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /muscle group/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /description/i })).toBeInTheDocument();
+    expect(screen.getByRole('spinbutton', { name: /sets/i })).toBeInTheDocument();
+    expect(screen.getByRole('spinbutton', { name: /reps per set/i })).toBeInTheDocument();
+    expect(screen.getByRole('spinbutton', { name: /hold time/i })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /bilateral/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
 
@@ -38,13 +38,13 @@ describe('ExerciseModal', () => {
     render(<ExerciseModal open={true} exercise={mockExercise} onClose={mockOnClose} onUpdate={mockOnUpdate} onDelete={mockOnDelete} />);
     
     expect(screen.getByText('Edit Exercise')).toBeInTheDocument();
-    expect(screen.getByLabelText('Name')).toHaveValue('Push-ups');
-    expect(screen.getByLabelText('Muscle Group')).toHaveValue('ARMS');
-    expect(screen.getByLabelText('Description')).toHaveValue('Basic push-ups');
-    expect(screen.getByLabelText('Sets')).toHaveValue(3);
-    expect(screen.getByLabelText('Reps per Set')).toHaveValue(10);
-    expect(screen.getByLabelText('Hold Time (s)')).toHaveValue(0);
-    expect(screen.getByLabelText('Bilateral')).not.toBeChecked();
+    expect(screen.getByRole('textbox', { name: /name/i })).toHaveValue('Push-ups');
+    expect(screen.getByRole('button', { name: /muscle group/i })).toHaveTextContent('Arms');
+    expect(screen.getByRole('textbox', { name: /description/i })).toHaveValue('Basic push-ups');
+    expect(screen.getByRole('spinbutton', { name: /sets/i })).toHaveValue(3);
+    expect(screen.getByRole('spinbutton', { name: /reps per set/i })).toHaveValue(10);
+    expect(screen.getByRole('spinbutton', { name: /hold time/i })).toHaveValue(0);
+    expect(screen.getByRole('checkbox', { name: /bilateral/i })).not.toBeChecked();
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
   });
@@ -52,13 +52,14 @@ describe('ExerciseModal', () => {
   test('calls onUpdate when form is submitted', () => {
     render(<ExerciseModal open={true} onClose={mockOnClose} onUpdate={mockOnUpdate} onDelete={mockOnDelete} />);
     
-    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Squats' } });
-    fireEvent.change(screen.getByLabelText('Muscle Group'), { target: { value: 'LEGS' } });
-    fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Basic squats' } });
-    fireEvent.change(screen.getByLabelText('Sets'), { target: { value: '4' } });
-    fireEvent.change(screen.getByLabelText('Reps per Set'), { target: { value: '12' } });
-    fireEvent.change(screen.getByLabelText('Hold Time (s)'), { target: { value: '2' } });
-    fireEvent.click(screen.getByLabelText('Bilateral'));
+    fireEvent.change(screen.getByRole('textbox', { name: /name/i }), { target: { value: 'Squats' } });
+    fireEvent.mouseDown(screen.getByRole('button', { name: /muscle group/i }));
+    fireEvent.click(screen.getByRole('option', { name: /legs/i }));
+    fireEvent.change(screen.getByRole('textbox', { name: /description/i }), { target: { value: 'Basic squats' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: /sets/i }), { target: { value: '4' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: /reps per set/i }), { target: { value: '12' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: /hold time/i }), { target: { value: '2' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: /bilateral/i }));
     
     fireEvent.click(screen.getByRole('button', { name: 'Add' }));
     
