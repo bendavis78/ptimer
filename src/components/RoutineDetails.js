@@ -99,14 +99,18 @@ function RoutineDetails() {
     setDeleteConfirmOpen(true);
   };
 
-  const confirmDelete = () => {
-    const routines = await getRoutines();
-    const routineToDelete = routines.find(routine => routine.name === decodedRoutineName);
-    if (routineToDelete) {
-      await deleteRoutine(routineToDelete.id);
+  const confirmDelete = async () => {
+    try {
+      const routines = await getRoutines();
+      const routineToDelete = routines.find(routine => routine.name === decodedRoutineName);
+      if (routineToDelete) {
+        await deleteRoutine(routineToDelete.id);
+      }
+      setDeleteConfirmOpen(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to delete routine:', error);
     }
-    setDeleteConfirmOpen(false);
-    navigate('/');
   };
 
   return (
