@@ -102,7 +102,7 @@ export const updateExercise = async (exercise) => {
     const request = store.put(exercise);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => resolve(exercise);
   });
 };
 
@@ -114,6 +114,6 @@ export const deleteExercise = async (exerciseId) => {
     const request = store.delete(exerciseId);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => resolve();
   });
 };
