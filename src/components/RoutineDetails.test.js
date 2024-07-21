@@ -1,10 +1,10 @@
 import 'fake-indexeddb/auto';
+import { db } from '../utils/db';
 import React from 'react';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
-import { db } from '../utils/db';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   return render(
