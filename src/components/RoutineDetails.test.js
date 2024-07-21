@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
 import { db } from '../utils/db';
 
-// Import and configure fake-indexeddb
+// Import fake-indexeddb before our db module
 import 'fake-indexeddb/auto';
-import { IDBFactory } from 'fake-indexeddb';
 
 const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
   return render(
@@ -18,11 +17,6 @@ const renderWithRouter = (ui, { route = '/routine/Test%20Routine' } = {}) => {
     </MemoryRouter>
   );
 };
-
-beforeAll(() => {
-  // Set up the fake IndexedDB
-  global.indexedDB = new IDBFactory();
-});
 
 beforeEach(async () => {
   // Clear the database before each test
@@ -39,37 +33,37 @@ afterAll(async () => {
 });
 
 test('renders routine name', async () => {
-  await act(async () => {
-    renderWithRouter(<RoutineDetails />);
+  renderWithRouter(<RoutineDetails />);
+  await waitFor(() => {
+    const routineNameHeading = screen.getByText('Test Routine');
+    expect(routineNameHeading).toBeInTheDocument();
   });
-  const routineNameHeading = screen.getByText('Test Routine');
-  expect(routineNameHeading).toBeInTheDocument();
 });
 
 test('displays empty exercise list', async () => {
-  await act(async () => {
-    renderWithRouter(<RoutineDetails />);
+  renderWithRouter(<RoutineDetails />);
+  await waitFor(() => {
+    const exerciseList = screen.queryAllByRole('listitem');
+    expect(exerciseList).toHaveLength(0);
   });
-  const exerciseList = screen.queryAllByRole('listitem');
-  expect(exerciseList).toHaveLength(0);
 });
 
 test('adds a new exercise', async () => {
-  await act(async () => {
-    renderWithRouter(<RoutineDetails />);
-  });
+  renderWithRouter(<RoutineDetails />);
   
-  const addExerciseButton = screen.getByText(/Add Exercise/i);
-  fireEvent.click(addExerciseButton);
+  await waitFor(() => {
+    const addExerciseButton = screen.getByText(/Add Exercise/i);
+    fireEvent.click(addExerciseButton);
+  });
 
-  const exerciseInput = screen.getByLabelText(/Exercise Name/i);
+  const exerciseInput = await screen.findByLabelText(/Exercise Name/i);
   fireEvent.change(exerciseInput, { target: { value: 'Push-ups' } });
 
-  const addExerciseDialogButton = screen.getByTestId('dialog-add-exercise-button');
-  await act(async () => {
-    fireEvent.click(addExerciseDialogButton);
-  });
+  const addExerciseDialogButton = await screen.findByTestId('dialog-add-exercise-button');
+  fireEvent.click(addExerciseDialogButton);
 
-  const newExercise = await screen.findByText(/Push-ups/i);
-  expect(newExercise).toBeInTheDocument();
+  await waitFor(() => {
+    const newExercise = screen.getByText(/Push-ups/i);
+    expect(newExercise).toBeInTheDocument();
+  });
 });
