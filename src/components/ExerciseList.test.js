@@ -46,7 +46,7 @@ test('opens modal when Add Exercise button is clicked', async () => {
   const addButton = await screen.findByText(/Add Exercise/i);
   fireEvent.click(addButton);
 
-  const modalTitle = await screen.findByText(/Add Exercise/i);
+  const modalTitle = await screen.findByRole('heading', { name: /Add Exercise/i });
   expect(modalTitle).toBeInTheDocument();
 });
 
@@ -62,7 +62,7 @@ test('adds a new exercise', async () => {
   const nameInput = await screen.findByLabelText(/Name/i);
   fireEvent.change(nameInput, { target: { value: 'New Exercise' } });
 
-  const saveButton = await screen.findByText(/Add/i);
+  const saveButton = await screen.findByRole('button', { name: /Add/i });
   fireEvent.click(saveButton);
 
   await waitFor(() => {
@@ -100,7 +100,7 @@ test('updates an existing exercise', async () => {
   const nameInput = await screen.findByLabelText(/Name/i);
   fireEvent.change(nameInput, { target: { value: 'Advanced Push-ups' } });
 
-  const saveButton = await screen.findByText(/Save/i);
+  const saveButton = await screen.findByRole('button', { name: /Save/i });
   fireEvent.click(saveButton);
 
   await waitFor(() => {
@@ -121,7 +121,7 @@ test('deletes an existing exercise', async () => {
   const exerciseItem = await screen.findByText('Push-ups');
   fireEvent.click(exerciseItem);
 
-  const deleteButton = await screen.findByText(/Delete/i);
+  const deleteButton = await screen.findByRole('button', { name: /Delete/i });
   fireEvent.click(deleteButton);
 
   await waitFor(() => {

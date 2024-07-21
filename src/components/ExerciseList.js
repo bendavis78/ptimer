@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { 
   List, 
   ListItem, 
@@ -8,6 +7,7 @@ import {
   Button
 } from '@mui/material';
 import ExerciseModal from './ExerciseModal';
+import { getExercises, addExercise, updateExercise, deleteExercise } from '../utils/indexedDB';
 
 function ExerciseList() {
   const [exercises, setExercises] = useState([]);
@@ -15,11 +15,17 @@ function ExerciseList() {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   useEffect(() => {
-    const storedExercises = localStorage.getItem('exercises');
-    if (storedExercises) {
-      setExercises(JSON.parse(storedExercises));
-    }
+    fetchExercises();
   }, []);
+
+  const fetchExercises = async () => {
+    try {
+      const fetchedExercises = await getExercises();
+      setExercises(fetchedExercises);
+    } catch (error) {
+      console.error('Failed to fetch exercises:', error);
+    }
+  };
 
   const handleClickOpen = () => {
     setSelectedExercise(null);
@@ -31,36 +37,33 @@ function ExerciseList() {
     setSelectedExercise(null);
   };
 
-  const resetExerciseModal = () => {
-    setSelectedExercise(null);
-    setOpen(true);
-  };
-
   const handleExerciseClick = (exercise) => {
     setSelectedExercise(exercise);
     setOpen(true);
   };
 
-  const handleSaveExercise = (exerciseData) => {
-    let updatedExercises;
-    if (selectedExercise) {
-      // Update existing exercise
-      updatedExercises = exercises.map(ex => 
-        ex.id === selectedExercise.id ? exerciseData : ex
-      );
-    } else {
-      // Add new exercise
-      updatedExercises = [...exercises, { ...exerciseData, id: uuidv4() }];
+  const handleSaveExercise = async (exerciseData) => {
+    try {
+      if (selectedExercise) {
+        await updateExercise(exerciseData);
+      } else {
+        await addExercise(exerciseData);
+      }
+      await fetchExercises();
+      handleClose();
+    } catch (error) {
+      console.error('Failed to save exercise:', error);
     }
-    setExercises(updatedExercises);
-    localStorage.setItem('exercises', JSON.stringify(updatedExercises));
-    handleClose();
   };
 
-  const handleDeleteExercise = (exerciseToDelete) => {
-    const updatedExercises = exercises.filter(ex => ex.id !== exerciseToDelete.id);
-    setExercises(updatedExercises);
-    localStorage.setItem('exercises', JSON.stringify(updatedExercises));
+  const handleDeleteExercise = async (exerciseToDelete) => {
+    try {
+      await deleteExercise(exerciseToDelete.id);
+      await fetchExercises();
+      handleClose();
+    } catch (error) {
+      console.error('Failed to delete exercise:', error);
+    }
   };
 
   return (
@@ -69,13 +72,13 @@ function ExerciseList() {
         Exercises
       </Typography>
       <List>
-        {exercises.map((exercise, index) => (
-          <ListItem key={index} button onClick={() => handleExerciseClick(exercise)}>
+        {exercises.map((exercise) => (
+          <ListItem key={exercise.id} button onClick={() => handleExerciseClick(exercise)}>
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
       </List>
-      <Button variant="contained" onClick={resetExerciseModal} sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2 }}>
         Add Exercise
       </Button>
       <ExerciseModal
@@ -84,7 +87,6 @@ function ExerciseList() {
         exercise={selectedExercise}
         onUpdate={handleSaveExercise}
         onDelete={handleDeleteExercise}
-        key={selectedExercise ? selectedExercise.name : 'new'}
       />
     </>
   );
