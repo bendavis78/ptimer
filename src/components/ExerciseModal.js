@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import {
   Dialog,
   DialogTitle,
@@ -13,67 +12,56 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Typography,
 } from '@mui/material';
 import {
-  NECK_SHOULDERS,
-  BACK,
-  ARMS,
-  ABDOMINAL,
-  LEGS,
-  OTHER,
   muscleGroupLabels,
 } from '../constants/muscleGroups';
 
-function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [sets, setSets] = useState(0);
-  const [repsPerSet, setRepsPerSet] = useState(0);
-  const [holdTime, setHoldTime] = useState(0);
-  const [bilateral, setBilateral] = useState(false);
-  const [muscleGroup, setMuscleGroup] = useState('');
+function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineExercise = false }) {
+  const [localExercise, setLocalExercise] = useState({});
 
   const resetForm = useCallback(() => {
-    setId('');
-    setName('');
-    setDescription('');
-    setSets(0);
-    setRepsPerSet(0);
-    setHoldTime(0);
-    setBilateral(false);
-    setMuscleGroup('');
+    setLocalExercise({
+      id: '',
+      name: '',
+      description: '',
+      sets: 0,
+      repsPerSet: 0,
+      holdTime: 0,
+      bilateral: false,
+      muscleGroup: '',
+    });
   }, []);
 
   useEffect(() => {
-    if (open) {
-      if (exercise) {
-        setId(exercise.id || '');
-        setName(exercise.name || '');
-        setDescription(exercise.description || '');
-        setSets(exercise.sets || 0);
-        setRepsPerSet(exercise.repsPerSet || 0);
-        setHoldTime(exercise.holdTime || 0);
-        setBilateral(exercise.bilateral || false);
-        setMuscleGroup(exercise.muscleGroup || '');
-      } else {
-        resetForm();
-      }
+    if (open && exercise) {
+      setLocalExercise({
+        id: exercise.id || '',
+        name: exercise.name || '',
+        description: exercise.description || '',
+        sets: exercise.sets || 0,
+        repsPerSet: exercise.repsPerSet || 0,
+        holdTime: exercise.holdTime || 0,
+        bilateral: exercise.bilateral || false,
+        muscleGroup: exercise.muscleGroup || '',
+      });
+    } else {
+      resetForm();
     }
   }, [open, exercise, resetForm]);
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setLocalExercise(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate({
-      id: id || uuidv4(),
-      name,
-      description,
-      sets,
-      repsPerSet,
-      holdTime,
-      bilateral,
-      muscleGroup,
-    });
+    onUpdate(localExercise);
   };
 
   const handleDelete = () => {
@@ -83,91 +71,109 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete }) {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{exercise ? 'Edit Exercise' : 'Add Exercise'}</DialogTitle>
+      <DialogTitle>{isRoutineExercise ? 'Exercise Details' : (exercise ? 'Edit Exercise' : 'Add Exercise')}</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <FormControl fullWidth margin="dense">
-            <InputLabel id="muscle-group-label">Muscle Group</InputLabel>
-            <Select
-              labelId="muscle-group-label"
-              value={muscleGroup}
-              onChange={(e) => setMuscleGroup(e.target.value)}
-              label="Muscle Group"
-            >
-              {Object.entries(muscleGroupLabels).map(([value, label]) => (
-                <MenuItem key={value} value={value}>
-                  {label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            margin="dense"
-            label="Description"
-            type="text"
-            fullWidth
-            multiline
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          {isRoutineExercise ? (
+            <>
+              <Typography variant="h6">{localExercise.name}</Typography>
+              <Typography variant="body1">{localExercise.description}</Typography>
+              <Typography variant="body2">Muscle Group: {muscleGroupLabels[localExercise.muscleGroup]}</Typography>
+            </>
+          ) : (
+            <>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="name"
+                label="Name"
+                type="text"
+                fullWidth
+                value={localExercise.name}
+                onChange={handleChange}
+                required
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="muscle-group-label">Muscle Group</InputLabel>
+                <Select
+                  labelId="muscle-group-label"
+                  name="muscleGroup"
+                  value={localExercise.muscleGroup}
+                  onChange={handleChange}
+                  label="Muscle Group"
+                >
+                  {Object.entries(muscleGroupLabels).map(([value, label]) => (
+                    <MenuItem key={value} value={value}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                margin="dense"
+                name="description"
+                label="Description"
+                type="text"
+                fullWidth
+                multiline
+                rows={4}
+                value={localExercise.description}
+                onChange={handleChange}
+              />
+            </>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
             <TextField
               margin="dense"
+              name="sets"
               label="Sets"
               type="number"
-              value={sets}
-              onChange={(e) => setSets(Number(e.target.value))}
+              value={localExercise.sets}
+              onChange={handleChange}
               style={{ flex: 1 }}
             />
             <TextField
               margin="dense"
+              name="repsPerSet"
               label="Reps per Set"
               type="number"
-              value={repsPerSet}
-              onChange={(e) => setRepsPerSet(Number(e.target.value))}
+              value={localExercise.repsPerSet}
+              onChange={handleChange}
               style={{ flex: 1 }}
             />
             <TextField
               margin="dense"
+              name="holdTime"
               label="Hold Time (s)"
               type="number"
-              value={holdTime}
-              onChange={(e) => setHoldTime(Number(e.target.value))}
+              value={localExercise.holdTime}
+              onChange={handleChange}
               style={{ flex: 1 }}
             />
           </div>
           <FormControlLabel
             control={
               <Switch
-                checked={bilateral}
-                onChange={(e) => setBilateral(e.target.checked)}
+                name="bilateral"
+                checked={localExercise.bilateral}
+                onChange={handleChange}
               />
             }
             label="Bilateral"
           />
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
-          <Button 
-            onClick={handleDelete} 
-            color="error" 
-            sx={{ visibility: exercise ? 'visible' : 'hidden' }}
-          >
-            Delete
-          </Button>
+          {isRoutineExercise && (
+            <Button 
+              onClick={handleDelete} 
+              color="error"
+            >
+              Remove from Routine
+            </Button>
+          )}
           <div>
             <Button onClick={onClose} sx={{ mr: 1 }}>Cancel</Button>
-            <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>
+            {!isRoutineExercise && <Button type="submit">{exercise ? 'Save' : 'Add'}</Button>}
           </div>
         </DialogActions>
       </form>

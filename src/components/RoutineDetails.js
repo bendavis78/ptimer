@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { getRoutines, updateRoutine, deleteRoutine } from '../utils/db';
+import { getRoutines, updateRoutine, deleteRoutine, getExercises } from '../utils/db';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Container, 
@@ -12,8 +11,7 @@ import {
   Dialog, 
   DialogTitle, 
   DialogContent, 
-  DialogActions, 
-  TextField 
+  DialogActions
 } from '@mui/material';
 import ExerciseModal from './ExerciseModal';
 
@@ -21,26 +19,34 @@ function RoutineDetails() {
   const { routineName } = useParams();
   const navigate = useNavigate();
   const decodedRoutineName = decodeURIComponent(routineName);
+  const [routine, setRoutine] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [newExerciseName, setNewExerciseName] = useState('');
   const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [availableExercises, setAvailableExercises] = useState([]);
 
   useEffect(() => {
-    const fetchRoutine = async () => {
+    const fetchRoutineAndExercises = async () => {
       const routines = await getRoutines();
-      const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
-      if (currentRoutine && currentRoutine.exercises) {
-        setExercises(currentRoutine.exercises);
+      const currentRoutine = routines.find(r => r.name === decodedRoutineName);
+      if (currentRoutine) {
+        setRoutine(currentRoutine);
+        setExercises(currentRoutine.exercises || []);
       }
+      const allExercises = await getExercises();
+      setAvailableExercises(allExercises);
     };
-    fetchRoutine();
+    fetchRoutineAndExercises();
   }, [decodedRoutineName]);
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleExerciseClick = (exercise) => {
@@ -53,46 +59,30 @@ function RoutineDetails() {
     setSelectedExercise(null);
   };
 
-  const handleExerciseUpdate = (updatedExercise) => {
+  const handleExerciseUpdate = async (updatedExercise) => {
     const updatedExercises = exercises.map(ex => 
       ex.id === updatedExercise.id ? updatedExercise : ex
     );
     setExercises(updatedExercises);
     
-    const storedRoutines = JSON.parse(localStorage.getItem('workoutRoutines') || '[]');
-    const updatedRoutines = storedRoutines.map(routine => 
-      routine.name === decodedRoutineName 
-        ? { ...routine, exercises: updatedExercises } 
-        : routine
-    );
-    localStorage.setItem('workoutRoutines', JSON.stringify(updatedRoutines));
+    if (routine) {
+      const updatedRoutine = { ...routine, exercises: updatedExercises };
+      await updateRoutine(routine.id, updatedRoutine);
+      setRoutine(updatedRoutine);
+    }
     
     handleExerciseModalClose();
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setNewExerciseName('');
-  };
-
-  const handleAddExercise = async () => {
-    if (newExerciseName.trim() !== '') {
-      const newExercise = { id: uuidv4(), name: newExerciseName.trim() };
-      const updatedExercises = [...exercises, newExercise];
+  const handleAddExercise = async (exerciseToAdd) => {
+    if (routine) {
+      const updatedExercises = [...exercises, exerciseToAdd];
+      const updatedRoutine = { ...routine, exercises: updatedExercises };
+      await updateRoutine(routine.id, updatedRoutine);
+      setRoutine(updatedRoutine);
       setExercises(updatedExercises);
-      
-      try {
-        const routines = await getRoutines();
-        const currentRoutine = routines.find(routine => routine.name === decodedRoutineName);
-        if (currentRoutine) {
-          await updateRoutine(currentRoutine.id, { ...currentRoutine, exercises: updatedExercises });
-        }
-      } catch (error) {
-        console.error('Failed to update routine:', error);
-      }
-      
-      handleClose();
     }
+    handleClose();
   };
 
   const handleDeleteRoutine = () => {
@@ -100,16 +90,10 @@ function RoutineDetails() {
   };
 
   const confirmDelete = async () => {
-    try {
-      const routines = await getRoutines();
-      const routineToDelete = routines.find(routine => routine.name === decodedRoutineName);
-      if (routineToDelete) {
-        await deleteRoutine(routineToDelete.id);
-      }
+    if (routine) {
+      await deleteRoutine(routine.id);
       setDeleteConfirmOpen(false);
       navigate('/');
-    } catch (error) {
-      console.error('Failed to delete routine:', error);
     }
   };
 
@@ -132,23 +116,18 @@ function RoutineDetails() {
         Delete Routine
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Exercise</DialogTitle>
+        <DialogTitle>Add Exercise to Routine</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Exercise Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newExerciseName}
-            onChange={(e) => setNewExerciseName(e.target.value)}
-          />
+          <List>
+            {availableExercises.map((exercise) => (
+              <ListItem key={exercise.id} button onClick={() => handleAddExercise(exercise)}>
+                <ListItemText primary={exercise.name} />
+              </ListItem>
+            ))}
+          </List>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddExercise} data-testid="dialog-add-exercise-button">Add</Button>
         </DialogActions>
       </Dialog>
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
