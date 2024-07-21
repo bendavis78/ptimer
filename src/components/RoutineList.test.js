@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import RoutineList from './RoutineList';
 import * as db from '../utils/db';
 
@@ -12,8 +12,11 @@ jest.mock('../utils/db', () => ({
 }));
 
 const renderWithRouter = (ui, { route = '/' } = {}) => {
-  window.history.pushState({}, 'Test page', route);
-  return render(ui, { wrapper: BrowserRouter });
+  return render(
+    <MemoryRouter initialEntries={[route]}>
+      {ui}
+    </MemoryRouter>
+  );
 };
 
 beforeEach(() => {
@@ -29,7 +32,7 @@ test('renders Routines title', async () => {
 });
 
 test('opens dialog when Add Routine button is clicked', async () => {
-  indexedDB.getRoutines.mockResolvedValue([]);
+  db.getRoutines.mockResolvedValue([]);
   renderWithRouter(<RoutineList />);
   const addButton = await screen.findByText(/Add Routine/i);
   fireEvent.click(addButton);
@@ -62,10 +65,12 @@ test('adds a new routine when form is submitted', async () => {
 test('navigates to routine details when a routine is clicked', async () => {
   const testRoutine = { name: 'Test Routine', exercises: [] };
   db.getRoutines.mockResolvedValue([testRoutine]);
-  renderWithRouter(<RoutineList />);
+  const { history } = renderWithRouter(<RoutineList />);
 
   const routineItem = await screen.findByText(/Test Routine/i);
   fireEvent.click(routineItem);
 
-  expect(window.location.pathname).toBe('/routine/Test%20Routine');
+  await waitFor(() => {
+    expect(history.location.pathname).toBe('/routine/Test%20Routine');
+  });
 });
