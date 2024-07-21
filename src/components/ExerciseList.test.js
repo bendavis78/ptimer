@@ -40,7 +40,7 @@ test('displays exercises from IndexedDB', async () => {
 });
 
 test('opens modal when Add Exercise button is clicked', async () => {
-  indexedDB.getExercises.mockResolvedValue([]);
+  db.getExercises.mockResolvedValue([]);
   render(<ExerciseList />);
 
   const addButton = await screen.findByText(/Add Exercise/i);
@@ -104,7 +104,7 @@ test('updates an existing exercise', async () => {
   fireEvent.click(saveButton);
 
   await waitFor(() => {
-    expect(db.updateExercise).toHaveBeenCalledWith('1', expect.objectContaining({
+    expect(db.updateExercise).toHaveBeenCalledWith(expect.objectContaining({
       id: '1',
       name: 'Advanced Push-ups',
     }));
