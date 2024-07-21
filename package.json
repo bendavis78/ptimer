@@ -20,6 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ai": "react-scripts test -- --watchAll=false --detectOpenHandles --forceExit=true",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "test:e2e": "cypress run"
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "cypress": "^12.17.2"
+    "cypress": "^12.17.2",
+    "fake-indexeddb": "^6.0.0"
   }
 }
