@@ -61,7 +61,7 @@ function RoutineDetails() {
 
   const handleExerciseUpdate = async (updatedExercise) => {
     const updatedExercises = exercises.map(ex => 
-      ex.id === updatedExercise.id ? updatedExercise : ex
+      ex._id === updatedExercise._id ? updatedExercise : ex
     );
     setExercises(updatedExercises);
     
