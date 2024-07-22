@@ -13,6 +13,7 @@ import {
   DialogContent, 
   DialogActions
 } from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function RoutineDetails() {
   const { routineName } = useParams();
@@ -73,18 +74,51 @@ function RoutineDetails() {
     }
   };
 
+  const onDragEnd = async (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(exercises);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setExercises(items);
+
+    if (routine) {
+      const updatedRoutine = { ...routine, exercises: items };
+      await updateRoutine(routine._id, updatedRoutine);
+      setRoutine(updatedRoutine);
+    }
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         {decodedRoutineName}
       </Typography>
-      <List>
-        {exercises.map((exercise) => (
-          <ListItem key={exercise._id}>
-            <ListItemText primary={exercise.name} />
-          </ListItem>
-        ))}
-      </List>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="exercises">
+          {(provided) => (
+            <List {...provided.droppableProps} ref={provided.innerRef}>
+              {exercises.map((exercise, index) => (
+                <Draggable key={exercise._id} draggableId={exercise._id} index={index}>
+                  {(provided) => (
+                    <ListItem
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <ListItemText primary={exercise.name} />
+                    </ListItem>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </List>
+          )}
+        </Droppable>
+      </DragDropContext>
       <Button variant="contained" onClick={handleClickOpen} sx={{ mt: 2, mr: 2 }}>
         Add Exercise
       </Button>
