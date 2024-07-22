@@ -76,7 +76,10 @@ function RoutineDetails() {
 
   const handleAddExercise = async (exerciseToAdd) => {
     if (routine) {
-      const exerciseWithId = { ...exerciseToAdd, _id: exerciseToAdd._id || `temp_${Date.now()}` };
+      const exerciseWithId = { 
+        ...exerciseToAdd, 
+        _id: exerciseToAdd._id || `${routine._id}_exercise_${Date.now()}`
+      };
       const updatedExercises = [...exercises, exerciseWithId];
       const updatedRoutine = { ...routine, exercises: updatedExercises };
       await updateRoutine(routine._id, updatedRoutine);
@@ -104,8 +107,8 @@ function RoutineDetails() {
         {decodedRoutineName}
       </Typography>
       <List>
-        {exercises.map((exercise, index) => (
-          <ListItem key={index} button onClick={() => handleExerciseClick(exercise)}>
+        {exercises.map((exercise) => (
+          <ListItem key={exercise._id} button onClick={() => handleExerciseClick(exercise)}>
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
