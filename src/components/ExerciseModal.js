@@ -77,6 +77,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
     e.preventDefault();
     onUpdate({
       ...localExercise,
+      _id: localExercise._id, // Ensure _id is always included
       sets: parseInt(localExercise.sets, 10) || 0,
       repsPerSet: parseInt(localExercise.repsPerSet, 10) || 0,
       holdTime: parseInt(localExercise.holdTime, 10) || 0,

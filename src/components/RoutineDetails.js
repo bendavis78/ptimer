@@ -78,7 +78,7 @@ function RoutineDetails() {
     if (routine) {
       const exerciseWithId = { 
         ...exerciseToAdd, 
-        _id: exerciseToAdd._id || `${routine._id}_exercise_${Date.now()}`
+        _id: exerciseToAdd._id // Use the existing _id from the exercise
       };
       const updatedExercises = [...exercises, exerciseWithId];
       const updatedRoutine = { ...routine, exercises: updatedExercises };
