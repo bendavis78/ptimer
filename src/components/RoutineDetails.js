@@ -13,7 +13,6 @@ import {
   DialogContent, 
   DialogActions
 } from '@mui/material';
-import ExerciseModal from './ExerciseModal';
 
 function RoutineDetails() {
   const { routineName } = useParams();
@@ -23,8 +22,6 @@ function RoutineDetails() {
   const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState(null);
   const [availableExercises, setAvailableExercises] = useState([]);
 
   useEffect(() => {
@@ -47,31 +44,6 @@ function RoutineDetails() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleExerciseClick = (exercise) => {
-    setSelectedExercise(exercise);
-    setExerciseModalOpen(true);
-  };
-
-  const handleExerciseModalClose = () => {
-    setExerciseModalOpen(false);
-    setSelectedExercise(null);
-  };
-
-  const handleExerciseUpdate = async (updatedExercise) => {
-    const updatedExercises = exercises.map(ex => 
-      ex._id === updatedExercise._id ? updatedExercise : ex
-    );
-    setExercises(updatedExercises);
-    
-    if (routine) {
-      const updatedRoutine = { ...routine, exercises: updatedExercises };
-      await updateRoutine(routine.id, updatedRoutine);
-      setRoutine(updatedRoutine);
-    }
-    
-    handleExerciseModalClose();
   };
 
   const handleAddExercise = async (exerciseToAdd) => {
@@ -108,7 +80,7 @@ function RoutineDetails() {
       </Typography>
       <List>
         {exercises.map((exercise) => (
-          <ListItem key={exercise._id} button onClick={() => handleExerciseClick(exercise)}>
+          <ListItem key={exercise._id}>
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
@@ -144,12 +116,6 @@ function RoutineDetails() {
           <Button onClick={confirmDelete} color="error">I'm sure</Button>
         </DialogActions>
       </Dialog>
-      <ExerciseModal
-        open={exerciseModalOpen}
-        onClose={handleExerciseModalClose}
-        exercise={selectedExercise}
-        onUpdate={handleExerciseUpdate}
-      />
     </Container>
   );
 }
