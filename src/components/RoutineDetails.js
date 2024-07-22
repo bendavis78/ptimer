@@ -76,9 +76,10 @@ function RoutineDetails() {
 
   const handleAddExercise = async (exerciseToAdd) => {
     if (routine) {
-      const updatedExercises = [...exercises, exerciseToAdd];
+      const exerciseWithId = { ...exerciseToAdd, _id: exerciseToAdd._id || `temp_${Date.now()}` };
+      const updatedExercises = [...exercises, exerciseWithId];
       const updatedRoutine = { ...routine, exercises: updatedExercises };
-      await updateRoutine(routine.id, updatedRoutine);
+      await updateRoutine(routine._id, updatedRoutine);
       setRoutine(updatedRoutine);
       setExercises(updatedExercises);
     }
