@@ -13,7 +13,7 @@ import {
   DialogContent, 
   DialogActions
 } from '@mui/material';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 function RoutineDetails() {
   const { routineName } = useParams();
