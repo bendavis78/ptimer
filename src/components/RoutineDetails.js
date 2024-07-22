@@ -124,7 +124,7 @@ function RoutineDetails() {
         <DialogContent>
           <List>
             {availableExercises.map((exercise) => (
-              <ListItem key={exercise.id} button onClick={() => handleAddExercise(exercise)}>
+              <ListItem key={exercise._id} button onClick={() => handleAddExercise(exercise)}>
                 <ListItemText primary={exercise.name} />
               </ListItem>
             ))}
