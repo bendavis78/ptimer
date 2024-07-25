@@ -73,7 +73,7 @@ function ExerciseList() {
       </Typography>
       <List data-testid="exercise-list">
         {exercises.map((exercise) => (
-          <ListItem key={exercise._id} button onClick={() => handleExerciseClick(exercise)} data-testid="exercise-item">
+          <ListItem key={exercise._id || exercise.id} button onClick={() => handleExerciseClick(exercise)} data-testid="exercise-item">
             <ListItemText primary={exercise.name} />
           </ListItem>
         ))}
