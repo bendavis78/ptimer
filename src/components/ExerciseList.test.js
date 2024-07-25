@@ -88,7 +88,7 @@ test('opens modal with exercise data when exercise is clicked', async () => {
 });
 
 test('updates an existing exercise', async () => {
-  const mockExercise = { id: '1', name: 'Push-ups', description: 'Basic push-ups' };
+  const mockExercise = { _id: '1', name: 'Push-ups', description: 'Basic push-ups' };
   db.getExercises.mockResolvedValue([mockExercise]);
   db.updateExercise.mockResolvedValue();
 
@@ -105,14 +105,14 @@ test('updates an existing exercise', async () => {
 
   await waitFor(() => {
     expect(db.updateExercise).toHaveBeenCalledWith(expect.objectContaining({
-      id: '1',
+      _id: '1',
       name: 'Advanced Push-ups',
     }));
   });
 });
 
 test('deletes an existing exercise', async () => {
-  const mockExercise = { id: '1', name: 'Push-ups' };
+  const mockExercise = { _id: '1', name: 'Push-ups' };
   db.getExercises.mockResolvedValue([mockExercise]);
   db.deleteExercise.mockResolvedValue();
 
@@ -123,10 +123,6 @@ test('deletes an existing exercise', async () => {
 
   const deleteButton = await screen.findByRole('button', { name: /Delete/i });
   fireEvent.click(deleteButton);
-
-  // Close the modal
-  const closeButton = await screen.findByRole('button', { name: /Cancel/i });
-  fireEvent.click(closeButton);
 
   await waitFor(() => {
     expect(db.deleteExercise).toHaveBeenCalledWith('1');
