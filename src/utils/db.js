@@ -23,8 +23,13 @@ export const updateRoutine = async (id, routine) => {
 };
 
 export const deleteRoutine = async (id) => {
-  const doc = await db.get(id);
-  return db.remove(doc);
+  try {
+    const doc = await db.get(id);
+    return db.remove(doc);
+  } catch (error) {
+    console.error('Error deleting routine:', error);
+    throw error;
+  }
 };
 
 export const getExercises = async () => {

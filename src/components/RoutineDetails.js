@@ -68,7 +68,7 @@ function RoutineDetails() {
 
   const confirmDelete = async () => {
     if (routine) {
-      await deleteRoutine(routine.id);
+      await deleteRoutine(routine._id);
       setDeleteConfirmOpen(false);
       navigate('/');
     }
