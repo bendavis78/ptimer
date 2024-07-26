@@ -19,7 +19,9 @@ export const addRoutine = async (routine) => {
 
 export const updateRoutine = async (id, routine) => {
   const doc = await db.get(id);
-  return db.put({ ...doc, ...routine });
+  const updatedDoc = { ...doc, ...routine };
+  await db.put(updatedDoc);
+  return updatedDoc;
 };
 
 export const deleteRoutine = async (id) => {
