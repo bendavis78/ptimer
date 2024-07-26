@@ -42,7 +42,8 @@ describe('Routine Detail', () => {
     cy.get('.MuiDialog-paper').should('be.visible')
     cy.contains('Exercise 2').click()
     
-    // Check initial order
+    // Wait for exercises to be added and check initial order
+    cy.get('[data-testid="exercise-item"]', { timeout: 10000 }).should('have.length', 2)
     cy.get('[data-testid="exercise-item"]').eq(0).should('contain', 'Exercise 1')
     cy.get('[data-testid="exercise-item"]').eq(1).should('contain', 'Exercise 2')
     

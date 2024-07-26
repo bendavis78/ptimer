@@ -114,6 +114,7 @@ function RoutineDetails() {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      data-testid="exercise-item"
                     >
                       <ListItemText primary={exercise.name} />
                     </ListItem>
