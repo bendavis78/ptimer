@@ -32,15 +32,15 @@ describe('Routine Detail', () => {
     cy.contains(routineName).click()
     
     // Add two exercises to the routine
-    cy.contains('Add Exercise').click()
+    cy.get('button').contains('Add Exercise').click()
     cy.get('.MuiDialog-paper').should('be.visible')
-    cy.contains('Exercise 1').click()
+    cy.get('li').contains('Exercise 1').click()
     cy.get('button[type="submit"]').click()
     
-    cy.contains('Add Exercise').click()
+    cy.get('button').contains('Add Exercise').click()
     cy.get('.MuiDialog-paper').should('be.visible')
-    cy.contains('Exercise 2').click()
-    cy.contains('Add to Routine').click()
+    cy.get('li').contains('Exercise 2').click()
+    cy.get('button[type="submit"]').click()
     
     // Check initial order
     cy.get('[data-testid="exercise-item"]').eq(0).should('contain', 'Exercise 1')
