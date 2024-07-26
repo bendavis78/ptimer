@@ -35,7 +35,7 @@ describe('Routine Detail', () => {
     cy.contains('Add Exercise').click()
     cy.get('.MuiDialog-paper').should('be.visible')
     cy.contains('Exercise 1').click()
-    cy.contains('Add to Routine').click()
+    cy.get('button[type="submit"]').click()
     
     cy.contains('Add Exercise').click()
     cy.get('.MuiDialog-paper').should('be.visible')
