@@ -213,3 +213,12 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
 }
 
 export default ExerciseModal;
+            </Button>
+          </div>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+}
+
+export default ExerciseModal;
