@@ -54,11 +54,12 @@ function RoutineDetails() {
         _id: exerciseToAdd._id // Use the existing _id from the exercise
       };
       try {
+        const updatedExercises = [...exercises, exerciseWithId];
         const updatedRoutine = await updateRoutine(routine._id, {
-          exercises: [...routine.exercises, exerciseWithId]
+          exercises: updatedExercises
         });
         setRoutine(updatedRoutine);
-        setExercises(updatedRoutine.exercises);
+        setExercises(updatedExercises);
       } catch (error) {
         console.error('Failed to add exercise to routine:', error);
         // You might want to show an error message to the user here
