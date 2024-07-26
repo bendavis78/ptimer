@@ -29,7 +29,7 @@ describe('Exercise List', () => {
     cy.get('input[name="bilateral"]').click()
     
     // Submit the form
-    cy.contains('Add').click({ force: true })
+    cy.get('button[type="submit"]').click()
     
     // Verify that the new exercise appears in the list
     cy.contains('Push-ups').should('be.visible')
