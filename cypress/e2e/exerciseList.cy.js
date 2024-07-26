@@ -1,5 +1,7 @@
 describe('Exercise List', () => {
   beforeEach(() => {
+    // Reset the database before each test
+    cy.resetDatabase()
     // Visit the home page before each test
     cy.visit('http://localhost:3000')
     // Click on the Exercises tab

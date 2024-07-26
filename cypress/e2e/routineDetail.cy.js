@@ -1,5 +1,7 @@
 describe('Routine Detail', () => {
   beforeEach(() => {
+    // Reset the database before each test
+    cy.resetDatabase()
     cy.visit('http://localhost:3000')
     
     // Add exercises to the main exercises database
