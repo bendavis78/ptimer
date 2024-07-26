@@ -10,7 +10,7 @@ describe('Routine Detail', () => {
     cy.get('input[name="name"]').type('Exercise 1')
     cy.get('[data-testid="muscle-group-select"]').click()
     cy.get('[data-value="ARMS"]').click()
-    cy.get('button[type="submit"]').click()
+    cy.get('[data-testid="exercise-modal-submit"]').click()
     
     cy.contains('Add Exercise').click()
     cy.get('input[name="name"]').type('Exercise 2')
