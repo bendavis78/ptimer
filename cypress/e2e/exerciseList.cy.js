@@ -77,19 +77,17 @@ describe('Exercise List', () => {
     })
 
     // Store the text of the first exercise
-    cy.get('[data-testid="exercise-item"]').first().invoke('text').as('firstExerciseName')
-    
-    // Click on the first exercise in the list
-    cy.get('[data-testid="exercise-item"]').first().click()
-    
-    // Wait for the dialog to be visible
-    cy.get('.MuiDialog-paper').should('be.visible')
-    
-    // Click the delete button
-    cy.get('button').contains('Delete').click({ force: true })
-    
-    // Verify that the deleted exercise no longer appears in the list
-    cy.get('@firstExerciseName').then((exerciseName) => {
+    cy.get('[data-testid="exercise-item"]').first().invoke('text').then((exerciseName) => {
+      // Click on the first exercise in the list
+      cy.get('[data-testid="exercise-item"]').first().click()
+      
+      // Wait for the dialog to be visible
+      cy.get('.MuiDialog-paper').should('be.visible')
+      
+      // Click the delete button
+      cy.get('button').contains('Delete').click({ force: true })
+      
+      // Verify that the deleted exercise no longer appears in the list
       cy.contains(exerciseName).should('not.exist')
     })
   })
