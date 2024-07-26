@@ -1,6 +1,23 @@
 describe('Routine Detail', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000')
+    
+    // Add exercises to the main exercises database
+    cy.contains('Exercises').click()
+    cy.contains('Add Exercise').click()
+    cy.get('input[name="name"]').type('Exercise 1')
+    cy.get('[data-testid="muscle-group-select"]').click()
+    cy.get('[data-value="ARMS"]').click()
+    cy.contains('Add').click()
+    
+    cy.contains('Add Exercise').click()
+    cy.get('input[name="name"]').type('Exercise 2')
+    cy.get('[data-testid="muscle-group-select"]').click()
+    cy.get('[data-value="LEGS"]').click()
+    cy.contains('Add').click()
+    
+    // Navigate back to Routines
+    cy.contains('Routines').click()
   })
 
   it('can reorder exercises within a routine', () => {
