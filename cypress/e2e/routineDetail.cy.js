@@ -16,16 +16,14 @@ describe('Routine Detail', () => {
     
     // Add two exercises to the routine
     cy.contains('Add Exercise').click()
-    cy.get('input[name="name"]').type('Exercise 1')
-    cy.get('[data-testid="muscle-group-select"]').click()
-    cy.get('[data-value="ARMS"]').click()
-    cy.contains('Add').click()
+    cy.get('.MuiDialog-paper').should('be.visible')
+    cy.contains('Exercise 1').click()
+    cy.contains('Add to Routine').click()
     
     cy.contains('Add Exercise').click()
-    cy.get('input[name="name"]').type('Exercise 2')
-    cy.get('[data-testid="muscle-group-select"]').click()
-    cy.get('[data-value="LEGS"]').click()
-    cy.contains('Add').click()
+    cy.get('.MuiDialog-paper').should('be.visible')
+    cy.contains('Exercise 2').click()
+    cy.contains('Add to Routine').click()
     
     // Check initial order
     cy.get('[data-testid="exercise-item"]').eq(0).should('contain', 'Exercise 1')
