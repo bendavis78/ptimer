@@ -202,7 +202,7 @@ function ExerciseModal({ open, onClose, exercise, onUpdate, onDelete, isRoutineE
           )}
           <div>
             <Button onClick={onClose} sx={{ mr: 1 }}>Cancel</Button>
-            <Button type="submit" data-testid="exercise-modal-submit">
+            <Button type="submit" data-testid="exercise-modal-submit" variant="contained" color="primary">
               {exercise ? 'Save' : 'Add'}
             </Button>
           </div>

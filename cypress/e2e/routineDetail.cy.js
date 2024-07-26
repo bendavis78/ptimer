@@ -16,7 +16,7 @@ describe('Routine Detail', () => {
     cy.get('input[name="name"]').type('Exercise 2')
     cy.get('[data-testid="muscle-group-select"]').click()
     cy.get('[data-value="LEGS"]').click()
-    cy.get('button[type="submit"]').click()
+    cy.get('[data-testid="exercise-modal-submit"]').click()
     
     // Navigate back to Routines
     cy.contains('Routines').click()
