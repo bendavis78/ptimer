@@ -86,7 +86,7 @@ describe('Exercise List', () => {
     cy.get('.MuiDialog-paper').should('be.visible')
     
     // Click the delete button
-    cy.contains('Delete').click({ force: true })
+    cy.get('button').contains('Delete').click({ force: true })
     
     // Verify that the deleted exercise no longer appears in the list
     cy.get('@firstExerciseName').then((exerciseName) => {
